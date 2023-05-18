@@ -1,0 +1,18 @@
+{
+  "name": "autotranslator-i18n",
+  "description": "#### #### AT-i18n will searches for the ```key```, ```key/namespace```, ```key/default_text/namespace``` combinations then translates the extracted ```default_text``` or the key's value from the project's default language source translation file using the selected translation service.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "",
+    "dev": "node translator.cjs"
+  },
+  "author": "Cs4K1Sr4C",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "fs": "^0.0.1-security",
+    "inquirer": "^9.2.4",
+    "path": "^0.12.7"
+  }
+}
