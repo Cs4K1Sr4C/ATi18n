@@ -126,6 +126,7 @@ class Translator {
         const sourceTranslationValue = this.getTranslationValue(
           srcLangFilePath,
           key,
+          namespace
         );
         if (sourceTranslationValue !== '') {
           const translatedValue = await this.translateText(
@@ -144,7 +145,7 @@ class Translator {
                       this.writeTranslationFile(
                         targetLangFilePath,
                         key,
-                        enteredTranslation,
+                        enteredTranslation
                       );
                       rl.close();
                     },
@@ -232,14 +233,27 @@ class Translator {
     }
   }
 
-  getTranslationValue(filePath, key) {
-    if (!fs.existsSync(filePath)) {
-      return '';
-    }
-    const content = fs.readFileSync(filePath, 'utf8');
-    const translations = JSON.parse(content);
-    return translations[key] || '';
+  
+getTranslationValue(filePath, key, namespace) {
+  if (!fs.existsSync(filePath)) {
+    return '';
   }
+  const content = fs.readFileSync(filePath, 'utf8');
+  const translations = JSON.parse(content);
+  const keys = key.split('.');
+  let value = translations;
+  for (const k of keys) {
+    if (value.hasOwnProperty(k)) {
+      value = value[k];
+    } else {
+      value = '';
+      break;
+    }
+  }
+  return value;
+}
+
+
 
   async translateText(sourceTranslationValue) {
     if (this.translatorService === 'google') {
@@ -294,71 +308,76 @@ class Translator {
     }
   }
 
-  // Services
-  // GoogleTranslate
-  GoogleTranslate = async (
-    sourceLanguageCode,
-    targetLanguageCode,
-    sourceTranslationValue,
-  ) => {
-    const params = new URLSearchParams({
-      client: 'gtx',
-      sl: sourceLanguageCode,
-      tl: targetLanguageCode,
-      dt: 't',
-      q: sourceTranslationValue,
-    }).toString();
+  async manageFolders() {
+  const allowedLocales = await this.detectAllowedLocales();
+  // Perform folder management operations based on the allowedLocales
+}
 
-    const url = `https://translate.google.com/translate_a/single?${params}`;
+async detectAllowedLocales() {
+  // Detect the allowed locales by analyzing the existing translation files
+  // and return an array of detected locales
+  return ["en", "de", "hu", "ja", "ko", "pt"]; // test
+}
 
-    const translationResult = await fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        const translatedText = data[0][0][0];
-        return translatedText;
-      })
-      .catch((error) => console.log(error));
+async translateProject() {
+  const allowedLocales = await this.detectAllowedLocales();
+  const sourceTranslationDir = path.join(
+    __dirname,
+    'public',
+    'locales',
+    'translation'
+  );
 
-    return translationResult !== undefined
-      ? translationResult.replace(/^['"`]+|['"`]+$/g, '')
-      : '';
-  };
+  if (fs.existsSync(sourceTranslationDir)) {
+    const files = fs.readdirSync(sourceTranslationDir);
+    files.forEach(async (file) => {
+      const srcFilePath = path.join(sourceTranslationDir, file);
+      const stats = fs.statSync(srcFilePath);
 
-  // Translate via OpenAI ChatCompletion
-  translateViaChatCompletion = async (TRANSLATE_PROMPT) => {
-    const translationResult = await this.openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      temperature: 1,
-      messages: [{ role: 'user', content: TRANSLATE_PROMPT }],
+      if (stats.isFile()) {
+        const content = fs.readFileSync(srcFilePath, 'utf8');
+        const translations = JSON.parse(content);
+
+        for (const locale of allowedLocales) {
+          const targetDir = path.join(
+            __dirname,
+            'public',
+            'locales',
+            locale,
+            'translation'
+          );
+
+          if (!fs.existsSync(targetDir)) {
+            fs.mkdirSync(targetDir, { recursive: true });
+          }
+
+          const targetFilePath = path.join(targetDir, file);
+          const targetContent = await this.translateJSON(translations, locale);
+          fs.writeFileSync(targetFilePath, targetContent, 'utf8');
+        }
+      }
     });
-    return translationResult.data.choices[0].message.content.replace(
-      /^['",`]+|['",`]+$/g,
-      '',
-    );
-  };
-
-  // Translate via OpenAI TextCompletion
-  translateViaTextCompletion = async (TRANSLATE_PROMPT) => {
-    const translationResult = await this.openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: TRANSLATE_PROMPT,
-      temperature: 0.7,
-      max_tokens: 100,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
-    });
-    return translationResult.data.choices[0].text
-      .split('\n\n')[1]
-      .replace(/^['",`]+|['",`]+$/g, '');
-  };
-
-  // main run
-  async run(srcDirectory) {
-    this.collectKeyNamespacePairs(srcDirectory);
-    await this.translateAndWriteFiles();
-    console.log('Translation files generated successfully.');
   }
+}
+
+async translateJSON(json, locale) {
+  const translatedJson = {};
+
+  await Promise.all(
+    Object.entries(json).map(async ([key, value]) => {
+      if (typeof value === 'object') {
+        translatedJson[key] = await this.translateJSON(value, locale);
+      } else {
+        this.targetLang = locale;
+        const translatedValue = await this.translateText(value);
+        translatedJson[key] = translatedValue;
+      }
+    })
+  );
+
+  return JSON.stringify(translatedJson, null, 2);
+}
+
 }
 
 const readline = require('readline');
