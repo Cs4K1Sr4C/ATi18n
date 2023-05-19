@@ -266,8 +266,8 @@ getTranslationValue(filePath, key, namespace) {
       this.translatorService === 'openai' &&
       this.openaiTranslationMethod === 'chat'
     ) {
-      const TRANSLATE_PROMPT = `Translate the ${sourceTranslationValue} text using the ${this.targetLang} language code then respond only with the translated text.`;
-      return await this.translateViaChatCompletion(TRANSLATE_PROMPT);
+      const USER_PROMPT = `What you have to translate is: "${sourceTranslationValue}"\nThe language code you have to use is: ${this.targetLang}`;
+      return await this.translateViaChatCompletion(USER_PROMPT);
     } else if (
       this.translatorService === 'openai' &&
       this.openaiTranslationMethod === 'text'
@@ -411,11 +411,13 @@ async translateJSON(json, locale) {
   };
 
   // Translate via OpenAI ChatCompletion
-  translateViaChatCompletion = async (TRANSLATE_PROMPT) => {
+  translateViaChatCompletion = async (USER_PROMPT) => {
+    const MASTER_PROMPT = "You are a professional translator named AT-i18n. You have to wait for the user to provide the translatable text and the target language's code. You have to respond ONLY with the translated text."
     const translationResult = await this.openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
       temperature: 1,
-      messages: [{ role: 'user', content: TRANSLATE_PROMPT }],
+      messages: [ {role: 'system', content: MASTER_PROMPT},
+        { role: 'user', content: USER_PROMPT }],
     });
     return translationResult.data.choices[0].message.content.replace(
       /^['",`]+|['",`]+$/g,
@@ -438,6 +440,14 @@ async translateJSON(json, locale) {
       .split('\n\n')[1]
       .replace(/^['",`]+|['",`]+$/g, '');
   };
+
+
+  // main run
+  async run(srcDirectory) {
+    this.collectKeyNamespacePairs(srcDirectory);
+    await this.translateAndWriteFiles();
+    console.log("Translation files generated successfully.");
+  }
 
 }
 
