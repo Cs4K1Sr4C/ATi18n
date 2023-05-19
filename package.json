@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "",
+    "build": "tsc",
     "dev": "node translator.cjs"
   },
   "author": "Cs4K1Sr4C",
