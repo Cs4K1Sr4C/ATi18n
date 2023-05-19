@@ -1,4 +1,4 @@
-# 🤖 AutoTranslator-i18n - An Autonomous Translator Agent for projects with i18n module 🌍
+# 🤖 ATi18n - An Autonomous Translator Agent for projects with i18n module 🌍
 
 ### AT-i18n will searches for the ```key```, ```key/namespace```, ```key/default_text/namespace``` combinations then translates the extracted ```default_text``` or the key's value from the project's default language source translation file using the selected translation service.
 
