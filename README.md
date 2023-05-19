@@ -33,15 +33,15 @@ Extracts the following syntaxes:
 
 - [x] Interactive terminal
 - [ ] Standalone npm installable module
-- [x] Supports flat JSON
-- [ ] Supports Nested JSON
+- [x] Supports Flat Translation JSON files
+- [x] Supports Nested translation JSON files
 - [x] OpenAI Chat & Text Completion as translator service
 - [x] Google Translate API-less solution
-- [ ] Ability to translate the missing key/value combination from the terminal
-- [ ] AI guess the translation from the key if the source translation or the default text is missing
+- [x] Ability to translate the missing key/value combination from the terminal
+- [x] AI guess the translation from the key if the source translation or the default text is missing
 - [ ] AI driven folder management
-- [ ] Auto-detection of the project's allowed locales
-- [ ] Translate automatically the entire project from the selected source language usig the detected allowed languages
+- [x] Auto-detection of the project's allowed locales
+- [x] Translate automatically the entire project from the selected source language usig the detected allowed languages
 - [x] Supports .ts, tsx, .js, .jsx, .cjs, .mjs files
 - [ ] Parameterizable npm run scripts
 - [ ] Self-integration into the project's package.json
