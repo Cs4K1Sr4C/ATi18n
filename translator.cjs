@@ -266,12 +266,14 @@ getTranslationValue(filePath, key, namespace) {
       this.translatorService === 'openai' &&
       this.openaiTranslationMethod === 'chat'
     ) {
-      return await this.translateViaChatCompletion(sourceTranslationValue);
+      const TRANSLATE_PROMPT = `Translate the ${sourceTranslationValue} text using the ${this.targetLang} language code then respond only with the translated text.`;
+      return await this.translateViaChatCompletion(TRANSLATE_PROMPT);
     } else if (
       this.translatorService === 'openai' &&
       this.openaiTranslationMethod === 'text'
     ) {
-      return await this.translateViaCompletion(sourceTranslationValue);
+      const TRANSLATE_PROMPT = `Translate the ${sourceTranslationValue} text using the ${this.targetLang} language code then respond only with the translated text.`;
+      return await this.translateViaTextCompletion(TRANSLATE_PROMPT);
     } else {
       return console.log('No translator service selected.');
     }
@@ -377,6 +379,65 @@ async translateJSON(json, locale) {
 
   return JSON.stringify(translatedJson, null, 2);
 }
+
+  // Services
+  // GoogleTranslate
+  GoogleTranslate = async (
+    sourceLanguageCode,
+    targetLanguageCode,
+    sourceTranslationValue,
+  ) => {
+    const params = new URLSearchParams({
+      client: 'gtx',
+      sl: sourceLanguageCode,
+      tl: targetLanguageCode,
+      dt: 't',
+      q: sourceTranslationValue,
+    }).toString();
+
+    const url = `https://translate.google.com/translate_a/single?${params}`;
+
+    const translationResult = await fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        const translatedText = data[0][0][0];
+        return translatedText;
+      })
+      .catch((error) => console.log(error));
+
+    return translationResult !== undefined
+      ? translationResult.replace(/^['"`]+|['"`]+$/g, '')
+      : '';
+  };
+
+  // Translate via OpenAI ChatCompletion
+  translateViaChatCompletion = async (TRANSLATE_PROMPT) => {
+    const translationResult = await this.openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      temperature: 1,
+      messages: [{ role: 'user', content: TRANSLATE_PROMPT }],
+    });
+    return translationResult.data.choices[0].message.content.replace(
+      /^['",`]+|['",`]+$/g,
+      '',
+    );
+  };
+
+  // Translate via OpenAI TextCompletion
+  translateViaTextCompletion = async (TRANSLATE_PROMPT) => {
+    const translationResult = await this.openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: TRANSLATE_PROMPT,
+      temperature: 0.7,
+      max_tokens: 100,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    });
+    return translationResult.data.choices[0].text
+      .split('\n\n')[1]
+      .replace(/^['",`]+|['",`]+$/g, '');
+  };
 
 }
 
