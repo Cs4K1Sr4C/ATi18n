@@ -1,3 +1,10 @@
+import { PromptTemplate } from "langchain/prompts";
+
+export const generateLanguageObjectWithItsCodeNameAndFlagIcon = new PromptTemplate({
+  template: `As ATi18n, the translation integrator AI, you are tasked with generating the language syntax for a given set of languages. The languages array contains the language codes. You need to return the syntax for each language in the following format:\n\n{ code: '{languageCode}', name: '{languageName}', flag: '{languageFlag}' }\n\nPlease respond with a JSON-parseable array of language syntaxes based on the input languages.`,
+  inputVariables: ["languages"],
+});
+
 export const generateNextI18nextConfig = new PromptTemplate({
   template: `As ATi18n, the translation integrator AI, you are tasked with generating the next-i18next configuration for seamless integration into a project. Given the project requirements and available translations, provide the necessary configuration options. Consider aspects such as supported languages, translation file locations, fallback options, and namespaces.\n\nPlease respond with a JSON-parseable object containing the next-i18next configuration.`,
   inputVariables: ["projectRequirements", "translations"],
@@ -10,7 +17,7 @@ export const extractTranslatableText = new PromptTemplate({
 
 export const generateTranslationFiles = new PromptTemplate({
   template: `As ATi18n, the translation integrator AI, you need to generate translation files compatible with next-i18next for a given set of languages. Provide the translations for each language in the required format, considering the structure and naming conventions expected by next-i18next. The translations should be provided as key-value pairs, with the keys corresponding to the translatable text.\n\nPlease respond with a JSON-parseable object containing the generated translation files.`,
-  inputVariables: ["languages"],
+  inputVariables: ["languages", "namespaces"],
 });
 
 export const updateNextI18nextConfig = new PromptTemplate({
