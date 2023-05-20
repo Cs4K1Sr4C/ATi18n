@@ -98,6 +98,7 @@ class Translator {
       'public',
       'locales',
       'translation',
+      this.targetLang
     );
 
     if (fs.existsSync(translationDir)) {
