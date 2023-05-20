@@ -10,10 +10,14 @@
   "author": "Cs4K1Sr4C",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^20.2.1",
     "dotenv": "^16.0.3",
     "fs": "^0.0.1-security",
     "inquirer": "^9.2.4",
     "path": "^0.12.7",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "langchain": "^0.0.78"
   }
 }
