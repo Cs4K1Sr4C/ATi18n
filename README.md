@@ -32,7 +32,7 @@ Extracts the following syntaxes:
 ## 🚗 Roadmap
 
 - :heavy_check_mark: Interactive terminal
-- [ ] Standalone npm installable module
+- - [ ] Standalone npm installable module
 - :heavy_check_mark: Supports Flat Translation JSON files
 - :heavy_check_mark: Supports Nested translation JSON files
 - :heavy_check_mark: OpenAI Chat & Text Completion as translator service
@@ -40,15 +40,15 @@ Extracts the following syntaxes:
 - :heavy_check_mark: Ability to translate the missing key/value combination from the terminal
 - :heavy_check_mark: AI guess the translation from the key if the source translation or the default text is missing
 - :heavy_check_mark: AI suggests the KEY and NAMESPACE if only the default text exists
-- [ ] AI driven folder management
+- - [ ] AI driven folder management
 - :heavy_check_mark: Auto-detection of the project's allowed locales
 - :heavy_check_mark: Translate automatically the entire project from the selected source language usig the detected allowed languages
 - :heavy_check_mark: Supports .ts, tsx, .js, .jsx, .cjs, .mjs files
 - :heavy_check_mark: Prompt for language/languages array creation ([{language_code, label, flag_icon}])
-- [ ] Parameterizable npm run scripts
-- [ ] Self-integration into the project's package.json
-- [ ] Autosearch for hard-coded parts which should be translatable
-- [ ] Self-integration to files, where found hard-coded parts, but the import of the translation module is missing
+- - [ ] Parameterizable npm run scripts
+- - [ ] Self-integration into the project's package.json
+- - [ ] Autosearch for hard-coded parts which should be translatable
+- - [ ] Self-integration to files, where found hard-coded parts, but the import of the translation module is missing
 
 
 ## 🎏 Services as translators
