@@ -100,6 +100,8 @@ npm run translate --onlyExtractKeys
 
 ## 📹 Video
 
+https://github.com/Cs4K1Sr4C/AutoTranslator-i18n/assets/126985144/7bb36994-0fca-4fc2-a7d3-5fb33ccbf2d3
+
 
 
 ## 🌟 Contribution
