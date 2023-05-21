@@ -91,12 +91,14 @@ Extracts the following syntaxes:
 4. Add the ```translate: node ./translator.cjs``` to your scripts in the ```package.json```
 5. Use one of the following npm run command:
 ```
-npm run test
-npm run translate --srcLang="en" --targetLang="en"
-npm run translate --all-possible --srcLang="en"
-npm run translate --manual=true --srcLang="en" --targetLang=<enter your target language here>
-npm run find-missing-module-integrations
+npm run translate
+npm run translate --srcLang="<enter your source language here>" --targetLang="<enter your target language here>"
+npm run translate --allAvailableLanguages --suggestKeyNamespace --onlyDefaultText --changeToGoogleAfterSuggestion
+npm run translate --onlyExtractKeys
 ```
+
+
+## 📹 Video
 
 
 
