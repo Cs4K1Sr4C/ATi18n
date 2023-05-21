@@ -3,6 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { Configuration, OpenAIApi } from "openai";
 import * as readline from "readline";
+import { languages } from "./utils/languages";
 
 dotenv.config();
 
