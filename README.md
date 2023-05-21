@@ -26,7 +26,7 @@ Extracts the following syntaxes:
 ***If the key or the value isn't found in the ```/{locales_dir}/{default_language}/{namespace}.json``` source translation file then the script will create the ```"{key}": "MISSING_TRANSLATION"``` key/value pair and writes it into the ```/{locales_dir}/translation/{namespace}.json``` file.***
 
 
-<details>
+<details open>
 <summary>
 
 ### REGEXP
@@ -35,8 +35,8 @@ Extracts the following syntaxes:
   
 ![image](https://github.com/Cs4K1Sr4C/AutoTranslator-i18n/assets/126985144/00587728-9302-4408-9dde-bd68b871c217)
   
-![image](https://github.com/Cs4K1Sr4C/AutoTranslator-i18n/assets/126985144/26a4b955-5f85-4426-a97e-f3ba742e9352)
-  
+![image](https://github.com/Cs4K1Sr4C/AutoTranslator-i18n/assets/126985144/0a2e4257-f518-4091-b418-fcb8c793cc2b)
+
 ![image](https://github.com/Cs4K1Sr4C/AutoTranslator-i18n/assets/126985144/93bf5848-912a-4475-952a-f89f95af8d68)
   
 </details>
