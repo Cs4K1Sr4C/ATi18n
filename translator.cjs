@@ -397,47 +397,98 @@ class Translator {
   }
   
   async suggestKeyAndNamespace(defaultText, fileName) {
-   if (
-      this.translatorService === 'openai' &&
-      this.openaiTranslationMethod === 'chat'
+    let parseable = false
+
+    if (
+      this.translatorService === "openai" &&
+      this.openaiTranslationMethod === "chat"
     ) {
-     const MASTER_PROMPT = `As ATi18n, the translation integrator AI, you need to wait for the user to provide a default text and a file name. Once provided, you will suggest a KEY and NAMESPACE based on the given text.\n\nYou should respond only with a JSON-parseable object with the following syntax:\n\n{key: "THE_SUGGESTED_KEY", namespace: "the_suggested_namespace", default_text: "the_given_default_text"}`;
-     const USER_PROMPT = `The default text is: "${defaultText}"\nThe filename is: "${fileName}"`;
-      const result = await this.openai.createChatCompletion({
-        model: 'gpt-3.5-turbo',
-        temperature: 0.7,
-        max_tokens: 64,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0,
-        messages: [{ role: 'system', content: MASTER_PROMPT },{ role: 'user', content: USER_PROMPT }],
-      });
+      const MASTER_PROMPT = `As ATi18n, the translation integrator AI, you need to wait for the user to provide a default text and a file name. You will return a KEY and NAMESPACE suggestion as a JSON object.\n\nYou have to respond only with a JSON object and nothing more which has the following syntax:\n\n{key: "CAPITALIZED_SNEAK_CASE_KEY_SUGGESTION", namespace: "the_suggested_namespace"}`
+      const USER_PROMPT = `The default text is: "${defaultText}"\nThe filename is: "${fileName}"`
 
-      const suggestion = result.data.choices[0].message.content.trim();
-      const [key, namespace] = suggestion.split('|').map((part) => part.trim());
+      while (!parseable) {
+        try {
+          const result = await this.openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            temperature: 0.7,
+            max_tokens: 64,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0,
+            messages: [
+              { role: "system", content: MASTER_PROMPT },
+              { role: "user", content: USER_PROMPT },
+            ],
+          })
 
-      return { key, namespace };
+          const suggestion = result.data.choices[0].message.content.trim()
+          parseable = true
+          return JSON.parse(suggestion)
+        } catch (error) {
+          if (
+            (error.response &&
+              error.response.data &&
+              error.response.data.error &&
+              error.response.data.error.message &&
+              error.response.data.error.message.includes(
+                "That model is currently overloaded with other requests"
+              )) ||
+            (error.response &&
+              error.response.data &&
+              error.response.data.error &&
+              error.response.data.error.message &&
+              error.response.data.error.type === "server_error")
+          ) {
+            console.log("OpenAI model is overloaded. Retrying after 5 seconds...")
+            await new Promise((resolve) => setTimeout(resolve, 5000))
+            continue
+          } else {
+            console.error("An error occurred:", error)
+            continue // Continue to the next iteration of the loop
+          }
+        }
+      }
     } else if (
-      this.translatorService === 'openai' &&
-      this.openaiTranslationMethod === 'text'
+      this.translatorService === "openai" &&
+      this.openaiTranslationMethod === "text"
     ) {
-      const MASTER_PROMPT = `Suggest key and namespace for the following default text: "${defaultText}"\nFor the namespace suggestion analyze the following filename: "${fileName}"\nRespond only with a JSON-parseable object by the following syntax: {key: "capitalized_sneak_case_capitalized_suggestion_key", namespace: "suggested_namespace"`;
-      const result = await this.openai.createCompletion({
-        model: 'text-davinci-003',
-        MASTER_PROMPT,
-        temperature: 0.7,
-        max_tokens: 64,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0,
-      });
+      const MASTER_PROMPT = `Suggest key and namespace for the following default text: "${defaultText}"\nFor the namespace suggestion analyze the following filename: "${fileName}"\nYou have to respond only with a JSON-parseable object which has the following syntax: {key: "capitalized_sneak_case_key_suggestion", namespace: "suggested_namespace"}`
 
-      const suggestion = result.data.choices[0].text.trim();
-      const [key, namespace] = suggestion.split('|').map((part) => part.trim());
+      while (!parseable) {
+        try {
+          const result = await this.openai.createCompletion({
+            model: "text-davinci-003",
+            MASTER_PROMPT,
+            temperature: 0.7,
+            max_tokens: 64,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0,
+          })
 
-      return { key, namespace };
-    } else {
-      throw new Error('Invalid translation service or translation method');
+          const suggestion = result.data.choices[0].text.trim()
+          parseable = true
+
+          return suggestion
+        } catch (error) {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.error &&
+            error.response.data.error.message &&
+            error.response.data.error.message.includes(
+              "That model is currently overloaded with other requests"
+            )
+          ) {
+            console.log("OpenAI model is overloaded. Retrying after 5 seconds...")
+            await new Promise((resolve) => setTimeout(resolve, 5000))
+            continue
+          } else {
+            console.error("An error occurred:", error)
+            continue // Continue to the next iteration of the loop
+          }
+        }
+      }
     }
   }
 
