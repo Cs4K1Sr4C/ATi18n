@@ -1,6 +1,6 @@
 # 🤖 ATi18n - An Autonomous Translator Agent for projects with i18n module 🌍
 
-### AT-i18n will searches for the ```key```, ```key/namespace```, ```key/default_text/namespace``` combinations then translates the extracted ```default_text``` or the key's value from the project's default language source translation file using the selected translation service.
+### ATi18n will search for the ```key```, ```key/namespace```, ```key/default_text/namespace``` combinations then it will translate the extracted ```default_text``` or the key's value from the project's default language source translation file using the selected translation service.
 
 
 
@@ -49,24 +49,24 @@ Extracts the following syntaxes:
 
 ## 🚗 Roadmap
 
-- :heavy_check_mark: Interactive terminal
-- :white_square_button: Standalone npm installable module
-- :heavy_check_mark: Supports Flat Translation JSON files
-- :heavy_check_mark: Supports Nested translation JSON files
-- :heavy_check_mark: OpenAI Chat & Text Completion as translator service
-- :heavy_check_mark: Google Translate API-less solution
-- :heavy_check_mark: Ability to translate the missing key/value combination from the terminal
-- :heavy_check_mark: AI guess the translation from the key if the source translation or the default text is missing
-- :heavy_check_mark: AI suggests the KEY and NAMESPACE if only the default text exists
-- :white_square_button: AI driven folder management
-- :heavy_check_mark: Auto-detection of the project's allowed locales
-- :heavy_check_mark: Translate automatically the entire project from the selected source language usig the detected allowed languages
-- :heavy_check_mark: Supports .ts, tsx, .js, .jsx, .cjs, .mjs files
-- :heavy_check_mark: Prompt for language/languages array creation ([{language_code, label, flag_icon}])
-- :white_square_button: Parameterizable npm run scripts
-- :white_square_button: Self-integration into the project's package.json
-- :white_square_button: Autosearch for hard-coded parts which should be translatable
-- :white_square_button: Self-integration to files, where found hard-coded parts, but the import of the translation module is missing
+- &#x2714; Interactive terminal
+- &#x25FB; Standalone npm installable module
+- &#x2714; Supports Flat Translation JSON files
+- &#x2714; Supports Nested translation JSON files
+- &#x2714; OpenAI Chat & Text Completion as translator service
+- &#x2714; Google Translate API-less solution
+- &#x2714; Ability to translate the missing key/value combination from the terminal
+- &#x2714; AI guess the translation from the key if the source translation or the default text is missing
+- &#x2714; AI suggests the KEY and NAMESPACE if only the default text exists
+- &#x25FB; AI driven folder management
+- &#x2714; Auto-detection of the project's allowed locales
+- &#x2714; Translate automatically the entire project from the selected source language using the detected allowed languages
+- &#x2714; Supports .ts, .tsx, .js, .jsx, .cjs, .mjs files
+- &#x2714; Prompt for language/languages array creation ([{language_code, label, flag_icon}])
+- &#x25FB; Parameterizable npm run scripts
+- &#x25FB; Self-integration into the project's package.json
+- &#x25FB; Autosearch for hard-coded parts which should be translatable
+- &#x25FB; Self-integration to files, where found hard-coded parts, but the import of the translation module is missing
 
 
 ## 🎏 Services as translators
