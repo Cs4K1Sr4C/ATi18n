@@ -33,7 +33,11 @@ Extracts the following syntaxes:
   
 </summary>
   
+***Translation collecting***
+  
 ![image](https://github.com/Cs4K1Sr4C/AutoTranslator-i18n/assets/126985144/00587728-9302-4408-9dde-bd68b871c217)
+  
+***Text extraction***
   
 ![image](https://github.com/Cs4K1Sr4C/AutoTranslator-i18n/assets/126985144/0a2e4257-f518-4091-b418-fcb8c793cc2b)
 
