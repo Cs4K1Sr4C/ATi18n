@@ -1,10 +1,13 @@
 # 🤖 ATi18n - An Autonomous Translator Agent for projects with i18n module 🌍
 
-### ATi18n will search for the ```key```, ```key/namespace```, ```key/default_text/namespace``` combinations then it will translate the extracted ```default_text``` or the key's value from the project's default language source translation file using the selected translation service.
+## ⭐ Description
 
+ATi18n is an autonomous translator agent designed for projects that utilize the i18n (internationalization) module. Its primary function is to search for combinations of key, key/namespace, and key/default_text/namespace, and then translate the extracted default_text or the value corresponding to the key from the project's default language source translation file using the selected translation service. ATi18n has various parameters and is able to process the entire project to extract the raw texts and modify the source files to make it compatible with the i18n module. In addition, it is also able to recognize the project and make suggestions and guide the user through the integration process if the i18n module is missing. It is also able to create a new or modify and configure properly the essential (next)-i18n(ext).config.js file based on the project's directory structure.
 
 
 ## ✨ Features
+
+ATi18n has the ability to collect raw texts from the source files's code.
 
 Extracts the following functions:
 - ```i18n?.t```
