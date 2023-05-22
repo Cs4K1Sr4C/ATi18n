@@ -49,48 +49,81 @@ class Translator {
     });
   }
 
-  extractKeyNamespacePairs(filePath) {
-    let fileContent = fs.readFileSync(filePath, 'utf8');
+    async extractKeyNamespacePairs(filePath) {
+    let fileContent = fs.readFileSync(filePath, "utf8")
 
     const regex =
-      /(?:translate\(|i18n\?\.t\(|t\()['"](?!(?:\\n|a)['"])([^'"]+)['"](?:\s?,\s?['"]([^'"]+)['"])?(?:,\s?['"]([^'"]+)['"])?\)/g;
-    let match;
+      /(?:translate\(|i18n\?\.t\()\s*?['"](?!(?:\\n|a|\?|visible|\/|_|#|&nbsp| |\.| at |-|T|\(|,|auto|import\("|img))([^'"]+)['"]\s*?(?:\s?,\s?['"]([^'"]+)['"])?(?:,\s?['"]([^'"]+)['"])?\)/g
+    let match
 
     while ((match = regex.exec(fileContent)) !== null) {
-      const key = match[1];
-      let defaultText = match[3]
-        ? match[2]
-        : match[2] !== ''
-          ? match[2]
-          : 'common';
+      const key = match[1]
+      let defaultText = match[3] ? match[2] : match[2] !== "" ? match[2] : "common"
       let namespace = match[3]
-        ? match[3] !== ''
+        ? match[3] !== ""
           ? match[3]
-          : 'common'
+          : "common"
         : match[2]
-          ? match[2] !== ''
-            ? match[2]
-            : 'common'
-          : 'common';
+        ? match[2] !== ""
+          ? match[2]
+          : "common"
+        : "common"
       if (this.debug && !match[3] && !match[4]) {
         console.log(
           key +
-          ' at line ' +
-          fileContent.substring(0, regex.lastIndex).split('\n').length +
-          ' ' +
-          filePath,
-        );
+            " at line " +
+            fileContent.substring(0, regex.lastIndex).split("\n").length +
+            " " +
+            filePath
+        )
       }
 
-      if (match[3]) {
-        this.keyTextNamespacePairs.push({ key, defaultText, namespace });
-        const replacement = `translate("${key}", "${namespace}")`;
-        fileContent = fileContent.replace(match[0], replacement);
+      if (this.mode === "suggestAndReplace") {
+        let default_text = match[1]
+        let fileName = path.basename(filePath)
+        let matchingLine = fileContent
+          .substring(0, regex.lastIndex)
+          .split("\n").length
+
+        const repeatSuggestion = async () => {
+          const suggestion = await this.suggestKeyAndNamespace(
+            default_text,
+            fileName
+          )
+
+          try {
+            let key_ = suggestion.key
+            let namespace_ = suggestion.namespace
+
+            console.log(key_, default_text, namespace_)
+
+            this.keyTextNamespacePairs.push({
+              key: key_,
+              defaultText: default_text,
+              namespace: fileName,
+            })
+
+            // let replacement = `translate("${key_}", "${namespace_}")`
+            // fileContent = fileContent.replace(match[0], replacement)
+          } catch (error) {
+            console.log("Invalid suggestion:", suggestion)
+            console.log("Error:", error)
+            await repeatSuggestion()
+          }
+        }
+
+        await repeatSuggestion()
       } else {
-        this.keyNamespacePairs.push({ key, namespace });
+        if (match[3]) {
+          this.keyTextNamespacePairs.push({ key, defaultText, namespace })
+          const replacement = `translate("${key}", "${namespace}")`
+          fileContent = fileContent.replace(match[0], replacement)
+        } else {
+          this.keyNamespacePairs.push({ key, namespace })
+        }
       }
     }
-    fs.writeFileSync(filePath, fileContent, 'utf8');
+    fs.writeFileSync(filePath, fileContent, "utf8")
   }
 
   async translateAndWriteFiles() {
