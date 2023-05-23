@@ -1,6 +1,6 @@
 {
   "name": "autotranslator-i18n",
-  "description": "#### #### AT-i18n will searches for the ```key```, ```key/namespace```, ```key/default_text/namespace``` combinations then translates the extracted ```default_text``` or the key's value from the project's default language source translation file using the selected translation service.",
+  "description": "#### #### ATi18n will searches for the ```key```, ```key/namespace```, ```key/default_text/namespace``` combinations then translates the extracted ```default_text``` or the key's value from the project's default language source translation file using the selected translation service.",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -10,11 +10,13 @@
   "author": "Cs4K1Sr4C",
   "license": "ISC",
   "devDependencies": {
+    "@clack/prompts": "^0.6.3",
     "@types/node": "^20.2.1",
     "dotenv": "^16.0.3",
     "fs": "^0.0.1-security",
     "inquirer": "^9.2.4",
     "path": "^0.12.7",
+    "picocolors": "^1.0.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {
