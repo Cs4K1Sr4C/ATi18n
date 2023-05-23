@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { REGEXES } from '../utils/regexes';
 
 interface MatchedPart {
   file: string;
