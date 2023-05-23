@@ -1,7 +1,11 @@
-.env
-
 # node_modules
 node_modules
 
-# dist
+# local .env file
+.env
+
+# compiled dist directory
 dist
+
+# VSCode ignores
+.vscode/settings.json
