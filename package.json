@@ -2,10 +2,11 @@
   "name": "autotranslator-i18n",
   "description": "#### #### ATi18n will searches for the ```key```, ```key/namespace```, ```key/default_text/namespace``` combinations then translates the extracted ```default_text``` or the key's value from the project's default language source translation file using the selected translation service.",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./dist/ati18n/index.js",
   "scripts": {
+    "start": "node ./dist/ati18n/index.js",
     "build": "tsc",
-    "dev": "node translator.cjs"
+    "dev": "tsc && node ./dist/ati18n/index.js"
   },
   "author": "Cs4K1Sr4C",
   "license": "ISC",
@@ -15,11 +16,11 @@
     "dotenv": "^16.0.3",
     "fs": "^0.0.1-security",
     "inquirer": "^9.2.4",
+    "langchain": "^0.0.78",
+    "next-i18next": "^13.2.2",
     "path": "^0.12.7",
     "picocolors": "^1.0.0",
+    "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
-  },
-  "dependencies": {
-    "langchain": "^0.0.78"
   }
 }
