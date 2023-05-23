@@ -10,25 +10,43 @@ template: `As ATi18n, the translation integrator and project translator AI, your
 
 Case 1:
 Source Code: "<Text title={Hello, world!}>Here just some text but need to be translated<"
-Action: Modify source code to include translation function
 Modified Source Code: "<Text title={${`translate('Hello, world!')`}}>{translate('Here just some text but need to be translated')}</"
 Explanation: In this case, you need to wrap the translatable parts with the translation function.
 
 Case 2:
 Source Code: "const welcomeMessage = 'Welcome, user!';"
-Action: Extract translatable part as a variable
-Extracted Translatable Part: "Welcome, user!"
-Explanation: In this case, you need to identify and extract the translatable part as a separate variable for easy translation.
+Modified Code: "const welcomeMessage = ${`translate('Welcome, user!')`}
+Explanation: In this case, you need to identify and wrap the translatable the translatable part with the translation function.
 
-Process the following source code accordingly to the described cases, then return the modified source code and the file name in a JSON-parseable object!
+Case 3:
+Source code: "<Input
+        size="lg"
+        {...register("name", {
+          required: "This field is required.",
+          maxLength: {
+            value: 50,
+            message: "The maximum possible name length is 50 characters",
+          },
+        })}"
+Modified Source Code:"<Input
+        size="lg"
+        {...register("name", {
+          required: translate('This field is required.'),
+          maxLength: {
+            value: 50,
+            message: \`\${translate('The maximum possible name length is 50 characters')}\`,
+          },
+        })}"
+Explanation: In this case, you need to identify and wrap the translatable parts with the translation function. Ensure that you are using the correct syntax of the translate wrapper, which can be \`\${translate()}\` or just simply translate()
 
-File:  {fileName}
+Process the following source code accordingly to the described cases, then return the modified source code!
+
 Source code:
 ...
 {sourceCode}
 ...
 `,
-inputVariables: ["sourceCode", "fileName"],
+inputVariables: ["sourceCode"],
 });
 /**
  * EXAMPLE

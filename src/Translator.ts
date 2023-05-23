@@ -2,6 +2,9 @@ import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as path from "path";
 import { Configuration, OpenAIApi } from "openai";
+import * as TextCompletionPrompts from './prompts/text/prompts';
+import './utils/helpers';
+import { REGEXES } from "./utils/regexes";
 
 dotenv.config();
 
