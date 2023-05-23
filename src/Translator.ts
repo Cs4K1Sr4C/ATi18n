@@ -2,16 +2,14 @@ import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as path from "path";
 import { Configuration, OpenAIApi } from "openai";
-import * as readline from "readline";
-import { languages } from "./utils/languages";
 
 dotenv.config();
 
 interface TranslationOptions {
-  srcLang?: string | null;
+  srcLang?: string | 'en';
   targetLang?: string | null;
   translateToAllAllowed?: boolean;
-  manualMode?: boolean;
+  translatorService?: string;
   transService?: string;
   openaiTranslationMethod?: string;
 }
@@ -437,7 +435,7 @@ class Translator {
       this.translatorService === "openai" &&
       this.openaiTranslationMethod === "chat"
     ) {
-      const MASTER_PROMPT = `As ATi18n, the translation integrator AI, you need to wait for the user to provide a default text and a file name. Once provided, you will suggest a KEY and NAMESPACE based on the given text.\n\nYou should respond only with a JSON-parseable object with the following syntax:\n\n{key: "THE_SUGGESTED_KEY", namespace: "the_suggested_namespace", default_text: "the_given_default_text"}`;
+      const MASTER_PROMPT = `As ATi18n, the translation integrator AI, you need to wait for the user to provide a default text and a file name. Once provided, you will suggest a KEY and NAMESPACE based on the given text.\n\nYou have to respond only with a JSON-parseable object with the following syntax:\n\n{key: "THE_SUGGESTED_KEY", namespace: "the_suggested_namespace", default_text: "the_given_default_text"}`;
       const USER_PROMPT = `The default text is: "${defaultText}"\nThe filename is: "${fileName}"`;
       const result = await this.openai.createChatCompletion({
         model: "gpt-3.5-turbo",
@@ -611,109 +609,6 @@ class Translator {
     await this.translateAndWriteFiles();
     console.log("[ATi18n]:> Translation files generated successfully.");
   }
-
-  // TODO: Format the rest of the Translator class from the ../translator.cjs
 }
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-rl.question(
-  "[ATi18n]:> Would you like me to translate the entire project automatically to all the locales you have enabled? (y/n) ",
-  (translate_entire_project: string) => {
-    if (
-      translate_entire_project === "y" ||
-      translate_entire_project === "yes"
-    ) {
-      rl.question(
-        "[ATi18n]:> Which kind of translation process would you like me to run?\n1. I have the translatable parts WITHOUT {key} and {namespace} declaration\n2. I have the translatable parts WITHOUT {default text} but the {key} and {namespace} are declared\n3. I have only the {default text} and the {namespace} declarations, but some parts contain only the {default text}\nChoose a number!\n",
-        async (translation_mode: string | number | undefined | null) => {
-          if (translation_mode === "1") {
-            console.log(
-              "[ATi18n]:> Translation mode 1 selected. I will create the keys and namespaces for you."
-            );
-            if (
-              translate_entire_project === "y" ||
-              translate_entire_project === "yes"
-            ) {
-              const translator = new Translator({
-                translateToAllAllowed: true,
-                srcLang: "en",
-              });
-              await translator.run("src");
-              rl.question(
-                "[ATi18n]:> Translation process completed successfully. Would you like me to create the flags for the created translation(s) and overwrite the corresponding file? (y/n)",
-                async (answer: string) => {
-                  if (answer === "y" || answer === "yes") {
-                    await translator.generateLanguageSyntaxes(
-                      await translator.detectAllowedLocales()
-                    );
-                    console.log(
-                      "[ATi18n]:> Translation flags created successfully."
-                    );
-                  } else {
-                    console.log("[ATi18n]:> Translation flags NOT created.");
-                  }
-                  rl.close();
-                }
-              );
-            } else if (translation_mode === ("2" as string)) {
-              console.log("[ATi18n]:> Translation mode 2 selected.");
-              // TODO:
-              rl.close();
-            } else if (translation_mode === ("3" as string)) {
-              console.log("[ATi18n]:> Translation mode 3 selected.");
-              // TODO:
-              rl.close();
-            } else {
-              console.log("[ATi18n]:> Invalid translation mode selected.");
-              rl.close();
-            }
-          } else {
-            rl.question(
-              "[ATi18n]:> Which kind of translation process would you like me to run?\n1. I have the translatable parts WITHOUT {key} and {namespace} declaration\n2. I have the translatable parts WITHOUT {default text} but the {key} and {namespace} are declared\n3. I have only the {default text} and the {namespace} declarations, but some parts contain only the {default text}\nChoose a number!\n",
-              (translation_mode: string) => {
-                if (translation_mode === "1") {
-                  console.log(
-                    "[ATi18n]:> Translation mode 1 selected. I will create the keys and namespaces for you."
-                  );
-                  rl.question(
-                    "[ATi18n]:> Enter source language code (Default: EN): ",
-                    (srcLang: string) => {
-                      srcLang === "" ? (srcLang = "en") : null;
-                      rl.question(
-                        "[ATi18n]:> Enter target language code (Default: HU): ",
-                        (targetLang: string) => {
-                          targetLang === "" ? (targetLang = "hu") : null;
-                          const translator = new Translator({
-                            srcLang,
-                            targetLang,
-                          });
-                          translator.run("src");
-                          rl.close();
-                        }
-                      );
-                    }
-                  );
-                } else if (translation_mode === "2") {
-                  console.log("[ATi18n]:> Translation mode 2 selected.");
-                  // TODO:
-                  rl.close();
-                } else if (translation_mode === "3") {
-                  console.log("[ATi18n]:> Translation mode 3 selected.");
-                  // TODO:
-                  rl.close();
-                } else {
-                  console.log("[ATi18n]:> Invalid translation mode selected.");
-                  rl.close();
-                }
-              }
-            );
-          }
-        }
-      );
-    }
-  }
-);
+export default Translator;
