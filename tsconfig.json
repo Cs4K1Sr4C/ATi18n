@@ -1,9 +1,25 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2017",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "*"
+      ]
+    },
     "noEmit": false,
     "allowJs": true,
     "checkJs": false,
     "outDir": "./dist/ati18n",
+    "ignoreDeprecations": "5.0",
+    "strictNullChecks": false
   },
   "include": [
     "src/**/*",

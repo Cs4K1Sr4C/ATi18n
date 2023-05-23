@@ -12,6 +12,8 @@
   "license": "ISC",
   "devDependencies": {
     "@clack/prompts": "^0.6.3",
+    "@types/chalk": "^2.2.0",
+    "@types/chalk-animation": "^1.6.1",
     "@types/node": "^20.2.1",
     "chalk": "^5.2.0",
     "chalk-animation": "^2.0.3",

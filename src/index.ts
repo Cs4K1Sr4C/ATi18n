@@ -1,4 +1,5 @@
-import * as terminal from './utils/terminal';
+require('dotenv').config();
+import main from './utils/terminal';
 import Translator from './Translator';
 
-terminal;
+main(true);

@@ -49,7 +49,7 @@ Source code:
 inputVariables: ["sourceCode"],
 });
 /**
- * EXAMPLE
+ * EXAMPLE (source of the sourceCode's value: Guild.xyz - https://github.com/agoraxyz/guild.xyz)
  * 
 INPUT:
 {

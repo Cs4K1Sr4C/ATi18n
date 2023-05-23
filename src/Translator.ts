@@ -5,10 +5,13 @@ import { Configuration, OpenAIApi } from "openai";
 import * as TextCompletionPrompts from './prompts/text/prompts';
 import './utils/helpers';
 import { REGEXES } from "./utils/regexes";
+import { setTimeout } from 'node:timers/promises';
 
 dotenv.config();
+console.log(process.env.OPENAI_TRANSLATION_METHOD);
 
 interface TranslationOptions {
+  debug?: boolean;
   srcLang?: string | 'en';
   targetLang?: string | null;
   availableLangs?: string[] | null;
@@ -30,6 +33,10 @@ interface KeyTextNamespacePair {
   namespace: string;
 }
 
+interface Translations {
+  [key: string]: string;
+}
+
 class Translator {
   private srcLang: string | null;
   private targetLang: string | null;
@@ -46,18 +53,18 @@ class Translator {
   private srcDirectory: any;
 
   constructor(options?: TranslationOptions) {
-    this.srcLang = options.srcLang || null;
-    this.targetLang = options.targetLang || null;
-    this.translateToAllAllowed = options.translateToAllAllowed || false;
+    this.srcLang = options?.srcLang || null;
+    this.targetLang = options?.targetLang || null;
+    this.translateToAllAllowed = options?.translateToAllAllowed || false;
     this.keyNamespacePairs = [];
     this.keyTextNamespacePairs = [];
     this.translatorService =
-      options.translatorService || process.env.TRANSLATOR_SERVICE || "google";
+      options?.translatorService || process.env.TRANSLATOR_SERVICE || "google";
     this.openaiTranslationMethod =
-      options.openaiTranslationMethod ||
+      options?.openaiTranslationMethod ||
       process.env.OPENAI_TRANSLATION_METHOD ||
       "chat";
-    this.debug = false;
+    this.debug = options?.debug || false;
 
     if (
       this.translatorService === "openai" &&
@@ -370,7 +377,7 @@ class Translator {
 
     if (fs.existsSync(filePath)) {
       const existingContent = fs.readFileSync(filePath, "utf8");
-      let existingTranslations = {};
+      let existingTranslations: Translations = {};
 
       try {
         existingTranslations = JSON.parse(existingContent);
@@ -382,7 +389,7 @@ class Translator {
 
       const sortedTranslations = Object.keys(mergedTranslations)
         .sort()
-        .reduce((sortedObj, sortedKey) => {
+        .reduce((sortedObj: Translations, sortedKey) => {
           sortedObj[sortedKey] = mergedTranslations[sortedKey];
           return sortedObj;
         }, {});
@@ -591,7 +598,7 @@ class Translator {
   translateViaTextCompletion = async (
     TRANSLATE_PROMPT: string
   ): Promise<string> => {
-    const translationResult = await this.openai.createCompletion({
+    const translationResult = await this?.openai?.createCompletion({
       model: "text-davinci-003",
       prompt: TRANSLATE_PROMPT,
       temperature: 0.7,
@@ -600,9 +607,14 @@ class Translator {
       frequency_penalty: 0,
       presence_penalty: 0,
     });
-    return translationResult.data.choices[0].text
-      .split("\n\n")[1]
-      .replace(/^['",`]+|['",`]+$/g, "");
+    if (translationResult?.data.choices[0].text) {
+  return translationResult.data.choices[0].text
+    .split("\n\n")[1]
+    .replace(/^['",`]+|['",`]+$/g, "");
+} else {
+  return '';
+}
+
   };
 
   // main run
