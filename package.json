@@ -13,6 +13,8 @@
   "devDependencies": {
     "@clack/prompts": "^0.6.3",
     "@types/node": "^20.2.1",
+    "chalk": "^5.2.0",
+    "chalk-animation": "^2.0.3",
     "dotenv": "^16.0.3",
     "fs": "^0.0.1-security",
     "langchain": "^0.0.78",
