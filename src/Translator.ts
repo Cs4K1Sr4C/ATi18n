@@ -11,10 +11,12 @@ dotenv.config();
 interface TranslationOptions {
   srcLang?: string | 'en';
   targetLang?: string | null;
+  availableLangs?: string[] | null;
   translateToAllAllowed?: boolean;
   translatorService?: string;
-  transService?: string;
   openaiTranslationMethod?: string;
+  isI18nConfigFileExist?: boolean;
+  i18nConfigFilePath?: string;
 }
 
 interface KeyNamespacePair {
@@ -43,14 +45,14 @@ class Translator {
   private translationDir: string | undefined;
   private srcDirectory: any;
 
-  constructor(options: TranslationOptions) {
+  constructor(options?: TranslationOptions) {
     this.srcLang = options.srcLang || null;
     this.targetLang = options.targetLang || null;
     this.translateToAllAllowed = options.translateToAllAllowed || false;
     this.keyNamespacePairs = [];
     this.keyTextNamespacePairs = [];
     this.translatorService =
-      options.transService || process.env.TRANSLATOR_SERVICE || "google";
+      options.translatorService || process.env.TRANSLATOR_SERVICE || "google";
     this.openaiTranslationMethod =
       options.openaiTranslationMethod ||
       process.env.OPENAI_TRANSLATION_METHOD ||
@@ -72,7 +74,7 @@ class Translator {
     }
   }
 
-  public collectKeyNamespacePairs(directory: string): void {
+  private collectKeyNamespacePairs(directory: string): void {
     const files = fs.readdirSync(directory);
 
     files.forEach((file) => {
@@ -90,7 +92,7 @@ class Translator {
     });
   }
 
-  public extractKeyNamespacePairs(filePath: string): void {
+  private extractKeyNamespacePairs(filePath: string): void {
     let fileContent: string = fs.readFileSync(filePath, "utf8");
 
     const regex: RegExp =
@@ -394,7 +396,7 @@ class Translator {
     }
   }
 
-  async detectAllowedLocales(): Promise<string[]> {
+  private async detectAllowedLocales(): Promise<string[]> {
     // Detect the allowed locales by analyzing the i18n config file and then return an array of detected locales
     return [
       "br",
