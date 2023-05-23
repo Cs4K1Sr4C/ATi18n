@@ -15,7 +15,6 @@
     "@types/node": "^20.2.1",
     "dotenv": "^16.0.3",
     "fs": "^0.0.1-security",
-    "inquirer": "^9.2.4",
     "langchain": "^0.0.78",
     "next-i18next": "^13.2.2",
     "path": "^0.12.7",
