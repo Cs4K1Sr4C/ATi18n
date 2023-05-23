@@ -1,8 +1,16 @@
-# 🤖 ATi18n - An Autonomous Translator Agent for projects with i18n module 🌍
+<h1 style="text-align: right">🤖 ATi18n - An Autonomous Translator Agent for projects with i18n module 🌍</h1>
 
 ## ⭐ Description
 
 ATi18n is an autonomous translator agent designed for projects that utilize the i18n (internationalization) module. Its primary function is to search for combinations of ```key```, ```key/namespace```, and ```key/default_text/namespace```, and then translate the extracted ```default_text``` or the value corresponding to the key from the project's default language source translation file using the selected translation service. ATi18n has various parameters and is able to process the entire project to extract the raw texts and modify the source files to make it compatible with the i18n module. In addition, it is also able to recognize the project and make suggestions and guide the user through the integration process if the i18n module is missing. It is also able to create a new or modify and configure properly the essential (next)-i18n(ext).config.js file based on the project's directory structure.
+
+
+## 🔥 ATi18n Translated Projects
+
+### One of the most amazing open-source autonomous task creator and executor AI Agent
+***[AgentGPT](https://agentgpt.reworkd.ai)***<br />
+### An other amazing open-source autonomous AI Agent which can write from the right to the left
+***[BabyAGI-UI](https://babyagi-ui.vercel.app)***
 
 
 ## ✨ Features
@@ -47,6 +55,13 @@ Extracts the following syntaxes:
 ![image](https://github.com/Cs4K1Sr4C/AutoTranslator-i18n/assets/126985144/93bf5848-912a-4475-952a-f89f95af8d68)
   
 </details>
+
+
+## 🐛 Bugs and other issues
+
+But hey, let's keep it real! ATi18n isn't perfect just yet. 🙈🔧 It does have a few bugs and areas that need improvement. I'm as the main developer constantly working on making it even better! 💪🛠️ I'm aware that some bugs may creep in, causing unexpected behavior. 🐛 Don't worry, I'm actively addressing these issues and squashing those bugs. 🐜🔨
+
+In addition, I'm always open for the suggestions and feedback from the community. 🤝❤️ Your input can help me enhance ATi18n's features, usability, and overall performance. Let's collaborate with me and others to create something amazing together! 🌟🌈
 
 
 
@@ -109,7 +124,7 @@ npm run translate --onlyExtractKeys
 
 https://github.com/Cs4K1Sr4C/AutoTranslator-i18n/assets/126985144/7bb36994-0fca-4fc2-a7d3-5fb33ccbf2d3
 
-
+(In the video I used an other amazing open-source project, [Guild.XYZ](https://github.com/agoraxyz/guild.xyz), for demonstrating and testing 🤖ATi18n's automatized translation power... 🦾
 
 ## 🌟 Contribution
 
