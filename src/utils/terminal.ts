@@ -1,13 +1,16 @@
+import ATi18n from '../components/ATi18n';
 import Translator from '../Translator';
 import * as p from '@clack/prompts';
 import color from 'picocolors';
-import { exec } from 'child_process';
-import runFlaskServer from './flaskServer';
 import { setTimeout } from 'node:timers/promises';
-import path from 'path';
+
+// TODO: Instantiate ATi18n Agent extended by the Translator class in a separated file and initialize it here or import the initialized stated of the Agent
+import { SystemChatMessage, HumanChatMessage } from "langchain/schema"; // TerminalAgent (mini terminal controller assistant - not ATi18n - only available if OpenAI API Key provided)
+import { ChatOpenAI } from "langchain/chat_models/openai";
+class TerminalAssistant{}
 
 
-export const selectMainMenu: any = async (shouldExit: boolean) => {
+export const selectMainMenu = async (shouldExit: boolean) => {
   const mainMenu = await p.select({
     message: "[🤖]:> What would you like to do?",
     options: [
@@ -50,7 +53,7 @@ export const selectExtractionMenu = async () => {
   return extractionMenu;
 };
 
-export const selectSettingsMenu: any = async () => {
+export const selectSettingsMenu = async () => {
   const settingsMenu = await p.select({
     message: "[🤖]:> What would you like to do?",
     options: [
@@ -80,14 +83,6 @@ export const selectTranslationMenu = async () => {
   return translationMenu;
 };
 
-export const promptExit = async () => {
-  console.clear();
-  const Exit = await p.confirm({
-    message: '[🤖]:> It seems everything is done. Would you like to exit or do yo need my assistance more?',
-  });
-  return Exit ? 'I want to EXIT' : 'I need you more...';
-};
-
 export const promptFlaskServer = async () => {
   console.clear();
   const flaskServer = await p.confirm({
@@ -95,14 +90,6 @@ export const promptFlaskServer = async () => {
   });
   return flaskServer ? 'yes' : 'no';
 };
-
-export const promptTranslateEntireProject = async () => {
-  const translateEntireProject = await p.confirm({
-    message: '[🤖]:> Would you like me to translate the entire project automatically to all the locales you have enabled? (y/n)',
-  });
-  return translateEntireProject ? 'yes' : 'no';
-};
-
 
 export const exit = async (shouldExit: boolean) => {
   shouldExit = true;
@@ -112,8 +99,10 @@ export const exit = async (shouldExit: boolean) => {
   return shouldExit;
 }
 
+// Elements
 const s = p.spinner();
 
+// Main - loop
 const main = async (firstRun: boolean) => {
   let shouldExit = false;
   if (firstRun) {
@@ -131,6 +120,5 @@ const main = async (firstRun: boolean) => {
 
 
 }
-
 
 export default main;
