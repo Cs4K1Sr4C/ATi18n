@@ -1,6 +1,10 @@
-import { PromptTemplate } from "langchain/prompts";
+import { SystemMessagePromptTemplate } from "langchain/prompts";
 
-export const ATI18N_MASTER_SYSTEM_PROMPT = new PromptTemplate({
-    template: '',
-    inputVariables: []
-})
+const prompt = SystemMessagePromptTemplate.fromTemplate(
+  "You are a helpful assistant that translates {input_language} to {output_language}."
+);
+
+const formattedPrompt = await prompt.format({
+  input_language: "English",
+  output_language: "French",
+});

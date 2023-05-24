@@ -10,10 +10,7 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "*": [
-        "node_modules/*",
-        "*"
-      ]
+      "*": ["node_modules/*", "*"]
     },
     "noEmit": false,
     "allowJs": true,
@@ -22,10 +19,6 @@
     "ignoreDeprecations": "5.0",
     "strictNullChecks": false
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*", ".env"],
+  "exclude": ["node_modules"]
 }

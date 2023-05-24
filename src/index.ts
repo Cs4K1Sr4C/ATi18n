@@ -1,4 +1,12 @@
-require('dotenv').config();
-import main from './utils/terminal';
+require("dotenv").config();
+import terminal from "./utils/terminal";
+import terminalAI from "./utils/terminalAI";
 
-main(true);
+if (
+  process.env.TRANSLATOR_SERICE === "openai" &&
+  process.env.OPENAI_API_KEY !== undefined
+) {
+  terminalAI(true);
+} else {
+  terminal(true);
+}
