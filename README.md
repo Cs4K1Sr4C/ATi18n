@@ -24,9 +24,10 @@ Extracts the following functions:
 
 Accepts the ```'``` and ```"``` in the functions for the ```key```, ```default_text```, ```namespace``` values.
 
-Extracts the following syntaxes:
+Extracts translations by the following syntaxes:
 - ```translate|t|i18n?.t("{key}")```
 - ```translate|t|i18n?.t("{key}", "{namespace}")```
+- ```translate|t|i18n?.t("{key}", { ns: {"{namespace}" })```
 - ```translate|t|i18n?.t("{key}", "{default_text"}, "{namespace}")```
 
 
@@ -37,19 +38,29 @@ Extracts the following syntaxes:
 ***If the key or the value isn't found in the ```/{locales_dir}/{default_language}/{namespace}.json``` source translation file then the script will create the ```"{key}": "MISSING_TRANSLATION"``` key/value pair and writes it into the ```/{locales_dir}/translation/{namespace}.json``` file.***
 
 
-<h6> 💻 AI driven interactive terminal </h6>
+<h4> 💻 AI driven interactive terminal </h4>
 
 https://github.com/Cs4K1Sr4C/AutoTranslator-i18n/assets/126985144/f16ed65f-bc89-4a14-b17e-a1d51290fbf0
 
 <details open>
 <summary>
 
-### REGEXP
+### Regular Expressions
   
 </summary>
   
 ***Translation collecting***
   
+<h5>translate|t|i18n?.t("DEFAULT_TEXT")</h5>
+  
+![image](https://github.com/Cs4K1Sr4C/ATi18n/assets/126985144/9806722e-f376-4fb0-b906-eeedc35576dc)
+  
+<h5>translate|t|i18n?.t("KEY", {ns: "NAMESPCE"})</h5>
+
+![image](https://github.com/Cs4K1Sr4C/ATi18n/assets/126985144/33ad8a66-98a3-4faf-9fcc-48910938995b)
+
+<h5>translate|t|i18n?.t("KEY", "DEFAUL_TEXT", "NAMESPACE")<h5>
+
 ![image](https://github.com/Cs4K1Sr4C/AutoTranslator-i18n/assets/126985144/00587728-9302-4408-9dde-bd68b871c217)
   
 ***Text extraction***
@@ -109,7 +120,7 @@ In addition, I'm always open for the suggestions and feedback from the community
 
 
 
-## ❓ How-to configure and run ⚙️🏃
+## ❓ How to configure ⚙️ and run 🏃
 
 1. Clone the repository using the ```git clone https://github.com/Cs4K1Sr4C/AutoTranslator-i18n``` or download and unzip the following archive: [AutoTranslator-i18n](https://github.com/Cs4K1Sr4C/AutoTranslator-i18n/archive/refs/heads/main.zip)
 2. Rename the ```.env.example``` file to ```.env``` or add its content to your ```.env``` file (***Note: be sure to set the proper values which fit your project***)
