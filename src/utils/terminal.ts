@@ -1,13 +1,7 @@
-import ATi18n from '../components/ATi18n';
-import Translator from '../Translator';
+import ATi18n from '../agents/ATi18n';
 import * as p from '@clack/prompts';
 import color from 'picocolors';
 import { setTimeout } from 'node:timers/promises';
-
-// TODO: Instantiate ATi18n Agent extended by the Translator class in a separated file and initialize it here or import the initialized stated of the Agent
-import { SystemChatMessage, HumanChatMessage } from "langchain/schema"; // TerminalAgent (mini terminal controller assistant - not ATi18n - only available if OpenAI API Key provided)
-import { ChatOpenAI } from "langchain/chat_models/openai";
-class TerminalAssistant{}
 
 
 export const selectMainMenu = async (shouldExit: boolean) => {
@@ -31,9 +25,9 @@ export const selectMainMenu = async (shouldExit: boolean) => {
   else if (mainMenu === '3') {
     const settingsMenu = await selectSettingsMenu();
   }
-  else if (mainMenu === '4') {}
+  else if (mainMenu === '4') { }
   else if (mainMenu === 'X') {
-    const _exit  = await exit(shouldExit);
+    const _exit = await exit(shouldExit);
     return _exit;
   }
 }
@@ -57,7 +51,7 @@ export const selectSettingsMenu = async () => {
   const settingsMenu = await p.select({
     message: "[🤖]:> What would you like to do?",
     options: [
-      { label: "Change Translation Service", value: "1" },
+      { label: "Change the Translation Service", value: "1" },
       { label: "Set/Change OpenAI key", value: "2" },
       { label: "Set/Change OpenAI Translation Mode", value: "3" },
       { label: "Set/change OpenAI Model", value: "4" },
@@ -70,16 +64,27 @@ export const selectSettingsMenu = async () => {
 
 export const selectTranslationMenu = async () => {
   const translationMenu = await p.select({
-    message: '[🤖]:> Which task would you like me to run?',
+    message: '[🤖]:> Choose the best fit for your project?',
     options: [
-      { label: '1. Translate. The parts are without {key} and {namespace}', value: '1' },
-      { label: '2. Translate. The parts are with {key} and {namespace}', value: '2' },
-      { label: '3. Translate. The parts are with {key} only', value: '3' },
-      { label: '4. Translate. The parts are with {default_text} and {namespace}', value: '4' },
-      { label: '5. Translate. The parts are with {default_text} only', value: '5' },
+      { label: 'The translatable parts are without {key} and {namespace}', value: '1' },
+      { label: 'The translatable parts are with {key} and {namespace}', value: '2' },
+      { label: 'The translatable parts are with {key} only', value: '3' },
+      { label: 'The translatable parts are with {default_text} and {namespace}', value: '4' },
+      { label: 'The translatable parts are with {default_text} only', value: '5' },
       { label: 'X. Back to the Main menu', value: 'X' },
     ],
   });
+  if (translationMenu === '1') {
+
+  } else if (translationMenu === '2') {
+
+  } else if (translationMenu === '3') {
+
+  } else if (translationMenu === '4') {
+
+  } else if (translationMenu === '5') {
+
+  } else if (translationMenu === 'X') { }
   return translationMenu;
 };
 
@@ -104,6 +109,15 @@ const s = p.spinner();
 
 // Main - loop
 const main = async (firstRun: boolean) => {
+
+  if (process.env.OPENAI_KEY === undefined || null) {
+    console.clear();
+    s.start("[⚠]:> Please set your OpenAI key in the .env file");
+    await setTimeout(5000);
+    s.stop("[⚠]:> Please set your OpenAI key in the .env file");
+    return;
+  }
+
   let shouldExit = false;
   if (firstRun) {
     console.clear();
@@ -113,9 +127,11 @@ const main = async (firstRun: boolean) => {
     s.stop("[🤖]:> Hi, I'm your personal AI assistant named ATi18n.");
   }
 
+
+
   while (!shouldExit) {
     const selectMainMenuAnswer = await selectMainMenu(shouldExit);
-    selectMainMenuAnswer  === true ? shouldExit = true : shouldExit = false;
+    selectMainMenuAnswer === true ? shouldExit = true : shouldExit = false;
   }
 
 
