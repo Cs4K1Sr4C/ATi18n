@@ -1,12 +1,17 @@
+import * as dotenv from "dotenv";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { HumanChatMessage } from "langchain/schema";
 import { OpenAI } from "langchain/llms/openai";
+
+dotenv.config();
+
+console.log(process.env.OPENAI_API_KEY);
 
 // TESTING
 export const TEST_COMPLETION = async (prompt: string) => {
   const model = new OpenAI({
     temperature: 0.9,
-    openAIApiKey: "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",
+    openAIApiKey: process.env.OPENAI_API_KEY,
   });
   const res = await model.call(prompt);
 

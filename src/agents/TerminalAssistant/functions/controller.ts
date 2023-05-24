@@ -1,9 +1,11 @@
-require("dotenv").config();
+import * as dotenv from "dotenv";
 import * as p from "@clack/prompts";
 import color from "picocolors";
 import { waitForEnter } from "../../../utils/helpers";
 import { setTimeout } from "node:timers/promises";
 import { TEST_COMPLETION, TEST_CHAT_COMPLETION } from "../../TerminalAssistant";
+
+dotenv.config();
 
 const s = p.spinner();
 
@@ -39,7 +41,7 @@ export const selectMainMenu = async (
       prompt: () =>
         p.text({
           message: "Type your prompt",
-          placeholder: "Tell me more about the vacuum in the spcae",
+          placeholder: process.env.OPENAI_API_KEY,
           validate: (value) => {
             if (!value) return "Please type your prompt";
           },
