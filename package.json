@@ -1,6 +1,6 @@
 {
-  "name": "autotranslator-i18n",
-  "description": "#### #### ATi18n will searches for the ```key```, ```key/namespace```, ```key/default_text/namespace``` combinations then translates the extracted ```default_text``` or the key's value from the project's default language source translation file using the selected translation service.",
+  "name": "ati18n",
+  "description": "",
   "version": "1.0.0",
   "main": "./dist/ati18n/index.js",
   "scripts": {
@@ -15,8 +15,6 @@
     "@types/chalk": "^2.2.0",
     "@types/chalk-animation": "^1.6.1",
     "@types/node": "^20.2.1",
-    "chalk": "^5.2.0",
-    "chalk-animation": "^2.0.3",
     "dotenv": "^16.0.3",
     "fs": "^0.0.1-security",
     "langchain": "^0.0.78",
