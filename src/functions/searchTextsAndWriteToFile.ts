@@ -66,7 +66,7 @@ async function searchTextsAndWriteToFile(directory: string): Promise<void> {
   const jsonOutput = JSON.stringify(jsonResult, null, 2);
   fs.writeFileSync(`${directory}/output.json`, jsonOutput);
 
-  console.log('Extraction completed. JSON object written to output.json file.');
+  console.log(`[🤖]:> Regex based extractions completed... The JSON file path is: ${directory}/output.json`);
 }
   
 export default searchTextsAndWriteToFile;
