@@ -37,7 +37,7 @@ Extracts the following syntaxes:
 ***If the key or the value isn't found in the ```/{locales_dir}/{default_language}/{namespace}.json``` source translation file then the script will create the ```"{key}": "MISSING_TRANSLATION"``` key/value pair and writes it into the ```/{locales_dir}/translation/{namespace}.json``` file.***
 
 
-### 💻 Interactive Terminal
+<h6> 💻 AI driven interactive terminal </h6>
 
 https://github.com/Cs4K1Sr4C/AutoTranslator-i18n/assets/126985144/f16ed65f-bc89-4a14-b17e-a1d51290fbf0
 
