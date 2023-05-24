@@ -13,21 +13,20 @@ export const writeAndMoveTranslateFile = (directory?: string | null) => {
     const defaultText = text ? text : key;
     return i18n?.t(key, defaultText, opts) ?? key;
   };`;
-  const defaultDirectory = './src/utils/';
-  const targetDirectory = directory || defaultDirectory;
+  const defaultDirectory = process.env.TRANSLATABLE_PROJECT_RELEATIVE_PATH;
+  const targetDirectory = defaultDirectory;
   const filePath = path.join(targetDirectory, 'translate.ts');
 
   try {
     fs.writeFileSync(filePath, content);
-    console.log(`File "translate.ts" created at ${filePath}`);
+    console.log(`[🤖]:> File "translate.ts" created at ${filePath}`);
 
-    // Move the file if it's not already in the target directory
     if (directory && directory !== defaultDirectory) {
       const newFilePath = path.join(targetDirectory, 'translate.ts');
       fs.renameSync(filePath, newFilePath);
-      console.log(`File moved to ${newFilePath}`);
+      console.log(`[🤖]:> File moved to ${newFilePath}`);
     }
   } catch (error) {
-    console.error('An error occurred while writing/moving the file:', error);
+    console.error('[🤖]:> An error occurred while writing/moving the file:', error);
   }
 };
