@@ -41,7 +41,7 @@ export const selectMainMenu = async (
       prompt: () =>
         p.text({
           message: "Type your prompt",
-          placeholder: process.env.OPENAI_API_KEY,
+          placeholder: "Tell me more about the vacuum in the universe",
           validate: (value) => {
             if (!value) return "Please type your prompt";
           },
