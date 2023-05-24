@@ -1,31 +1,31 @@
-require('dotenv').config();
-import * as p from '@clack/prompts';
-import color from 'picocolors';
-import { setTimeout } from 'node:timers/promises';
-import { selectMainMenu } from '../agents/TerminalAssistant/functions/controller';
+require("dotenv").config();
+import * as p from "@clack/prompts";
+import color from "picocolors";
+import { setTimeout } from "node:timers/promises";
+import { selectMainMenu } from "../agents/TerminalAssistant/functions/controller";
 
 // Elements
 const s = p.spinner();
 
 // Main - loop
-const main = async (firstRun: boolean) => {
-
+const terminalAI = async (firstRun: boolean) => {
   let shouldExit = false;
-
+  let _firstRun = firstRun;
   if (firstRun) {
     console.clear();
     p.intro(`${color.yellow("Welcome in the world of the languages!🌐")}`);
-    s.start('ℹ Your personal translator AI is walking closer to you...');
+    s.start("ℹ Your personal translator AI is walking closer to you...");
     await setTimeout(5000);
     s.stop("[🤖]:> Hi, I'm your personal AI assistant named ATi18n.");
   }
 
-  // Loop of the terminal
+  _firstRun = false;
+
   while (!shouldExit) {
-    const selectMainMenuAnswer = await selectMainMenu(shouldExit);
-    selectMainMenuAnswer === true ? shouldExit = true : shouldExit = false;
+    console.log(process.env.TRANSLATOR_SERICE, process.env.OPENAAI_API_KEY);
+    const selectMainMenuAnswer = await selectMainMenu(_firstRun, shouldExit);
+    selectMainMenuAnswer === true ? (shouldExit = true) : (shouldExit = false);
   }
+};
 
-}
-
-export default main;
+export default terminalAI;
