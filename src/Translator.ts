@@ -2,17 +2,17 @@ import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as path from "path";
 import { Configuration, OpenAIApi } from "openai";
-import * as TextCompletionPrompts from './prompts/text/prompts';
-import './utils/helpers';
+import * as TextCompletionPrompts from "./prompts/text/prompts";
+import "./utils/helpers";
 import { REGEXES } from "./utils/regexes";
-import { setTimeout } from 'node:timers/promises';
+import { setTimeout } from "node:timers/promises";
 
 dotenv.config();
 console.log(process.env.OPENAI_TRANSLATION_METHOD);
 
 interface TranslationOptions {
   debug?: boolean;
-  srcLang?: string | 'en';
+  srcLang?: string | "en";
   targetLang?: string | null;
   availableLangs?: string[] | null;
   translateToAllAllowed?: boolean;
@@ -196,7 +196,7 @@ class Translator {
               this.writeTranslationFile(
                 targetLangFilePath,
                 key,
-                "MISSING_TRANSLATION"
+                process.env.MISSING_TRANSLATION_PLACEHOLDER
               );
             }
             if (this.keyTextNamespacePairs.length > 0) {
@@ -224,7 +224,7 @@ class Translator {
                       this.writeTranslationFile(
                         targetLangFilePath,
                         key,
-                        "MISSING_TRANSLATION"
+                        process.env.MISSING_TRANSLATION_PLACEHOLDER
                       );
                     }
                   }
@@ -279,7 +279,7 @@ class Translator {
             this.writeTranslationFile(
               targetLangFilePath,
               key,
-              "MISSING_TRANSLATION"
+              process.env.MISSING_TRANSLATION_PLACEHOLDER
             );
           }
         })
@@ -310,7 +310,7 @@ class Translator {
                 this.writeTranslationFile(
                   targetLangFilePath,
                   key,
-                  "MISSING_TRANSLATION"
+                  process.env.MISSING_TRANSLATION_PLACEHOLDER
                 );
               }
             }
@@ -546,6 +546,69 @@ class Translator {
     }
   }
 
+  async synchronizeTranslations(sourceLang: string): Promise<void> {
+    const sourceLangDir = path.join(__dirname, "public", "locales", sourceLang);
+
+    if (!fs.existsSync(sourceLangDir)) {
+      throw new Error(
+        `Source language directory '${sourceLangDir}' does not exist.`
+      );
+    }
+
+    const sourceLangFiles = fs.readdirSync(sourceLangDir);
+
+    for (const sourceFile of sourceLangFiles) {
+      const sourceFilePath = path.join(sourceLangDir, sourceFile);
+      const sourceContent = fs.readFileSync(sourceFilePath, "utf8");
+      const sourceTranslations = JSON.parse(sourceContent);
+
+      const sourceNamespace = sourceFile.slice(0, -5); // Remove '.json' extension
+
+      for (const lang of await this.detectAllowedLocales()) {
+        if (lang === sourceLang) {
+          continue; // Skip the source language
+        }
+
+        const targetLangDir = path.join(__dirname, "public", "locales", lang);
+        const targetFilePath = path.join(
+          targetLangDir,
+          `${sourceNamespace}.json`
+        );
+
+        if (!fs.existsSync(targetLangDir)) {
+          throw new Error(
+            `Target language directory '${targetLangDir}' does not exist for language '${lang}'.`
+          );
+        }
+
+        let targetTranslations: { [key: string]: any } = {};
+        if (fs.existsSync(targetFilePath)) {
+          const targetContent = fs.readFileSync(targetFilePath, "utf8");
+          targetTranslations = JSON.parse(targetContent);
+          for (const [key, value] of Object.entries(sourceTranslations)) {
+            if (!(key in targetTranslations)) {
+              const translatedValue = await this.translateText(
+                value === undefined ? "" : "null"
+              );
+              targetTranslations[key] = translatedValue; // Add index signature
+            }
+          }
+        }
+
+        const sortedTranslations = Object.keys(targetTranslations)
+          .sort()
+          .reduce((sortedObj: { [key: string]: any }, sortedKey) => {
+            sortedObj[sortedKey] = targetTranslations[sortedKey];
+            return sortedObj;
+          }, {});
+
+        const mergedContent = JSON.stringify(sortedTranslations, null, 2);
+
+        fs.writeFileSync(targetFilePath, mergedContent, "utf8");
+      }
+    }
+  }
+
   // Services
   // GoogleTranslate
   GoogleTranslate = async (
@@ -608,13 +671,12 @@ class Translator {
       presence_penalty: 0,
     });
     if (translationResult?.data.choices[0].text) {
-  return translationResult.data.choices[0].text
-    .split("\n\n")[1]
-    .replace(/^['",`]+|['",`]+$/g, "");
-} else {
-  return '';
-}
-
+      return translationResult.data.choices[0].text
+        .split("\n\n")[1]
+        .replace(/^['",`]+|['",`]+$/g, "");
+    } else {
+      return "";
+    }
   };
 
   // main run

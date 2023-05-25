@@ -13,10 +13,6 @@ export const selectMainMenu = async (
   firstRun: boolean,
   shouldExit: boolean
 ) => {
-  if (!firstRun) {
-    console.log("First run");
-    console.clear();
-  }
   const mainMenu = await p.select({
     message: "[🤖]:> What would you like to do?",
     options: [
@@ -47,6 +43,7 @@ export const selectMainMenu = async (
           },
         }),
     });
+
     await TEST_CHAT_COMPLETION(project.prompt);
     await waitForEnter();
   } else if (mainMenu === "X") {
