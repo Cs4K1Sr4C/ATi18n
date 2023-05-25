@@ -2,7 +2,7 @@
 import * as p from "@clack/prompts";
 import color from "picocolors";
 import { setTimeout } from "node:timers/promises";
-import { selectMainMenu } from "../agents/TerminalAssistant/functions/controller";
+import { selectMainMenu } from "../agents/TerminalAssistant/main";
 
 // Elements
 const s = p.spinner();

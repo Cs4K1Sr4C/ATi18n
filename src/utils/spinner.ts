@@ -12,15 +12,17 @@ type SpinnerStage = {
 interface SpinnerOptions {
     startText: string | undefined | null,
     doneText: string | undefined | null,
-    failText: string | undefined | null,
+    failText?: string | undefined | null,
     stages: SpinnerStage[]
 }
 
-const customSpinner = async (SpinnerOptions: SpinnerOptions) => {
+export const customSpinner = async (SpinnerOptions: SpinnerOptions) => {
     console.log(SpinnerOptions);
 
     let progress = 0;
-    spin.start();
+    let stage = 0;
+
+    spin.start(SpinnerOptions.startText);
 
     await new Promise((resolve) => {
         const timer = setInterval(() => {
@@ -29,12 +31,11 @@ const customSpinner = async (SpinnerOptions: SpinnerOptions) => {
                 clearInterval(timer);
                 resolve(true);
             }
-            spin.message(`Loading packages [${progress}/${total}]`);     // <===
+            spin.message(`Loading packages [${progress}/${total}]`);
+            stage++;
         }, 100);
     });
 
-    spin.stop(`Done`);
+    spin.stop(SpinnerOptions.doneText);
 
 }
-
-export default customSpinner;

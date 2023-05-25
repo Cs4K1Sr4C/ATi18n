@@ -1,4 +1,4 @@
-import { menuOption } from '../types/menu'
+import { menuOption } from './types'
 
 export const mainMenuOptions: menuOption[] = [
     { label: "Extract", value: "1" },

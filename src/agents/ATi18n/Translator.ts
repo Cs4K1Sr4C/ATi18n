@@ -2,9 +2,9 @@ import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as path from "path";
 import { Configuration, OpenAIApi } from "openai";
-import * as TextCompletionPrompts from "./prompts/text/prompts";
-import "./utils/helpers";
-import { REGEXES } from "./utils/regexes";
+import * as TextCompletionPrompts from "../../prompts/text/prompts";
+import "../../utils/helpers";
+import { REGEXES } from "../../utils/regexes";
 import { setTimeout } from "node:timers/promises";
 
 dotenv.config();
@@ -111,24 +111,24 @@ class Translator {
       let defaultText: string = match[3]
         ? match[2]
         : match[2] !== ""
-        ? match[2]
-        : "common";
+          ? match[2]
+          : "common";
       let namespace: string = match[3]
         ? match[3] !== ""
           ? match[3]
           : "common"
         : match[2]
-        ? match[2] !== ""
-          ? match[2]
-          : "common"
-        : "common";
+          ? match[2] !== ""
+            ? match[2]
+            : "common"
+          : "common";
       if (this.debug && !match[3] && !match[4]) {
         console.log(
           key +
-            " at line " +
-            fileContent.substring(0, regex.lastIndex).split("\n").length +
-            " " +
-            filePath
+          " at line " +
+          fileContent.substring(0, regex.lastIndex).split("\n").length +
+          " " +
+          filePath
         );
       }
 

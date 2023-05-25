@@ -1,4 +1,6 @@
-import * as i18n from 'i18n';
+import * as fs from 'fs';
+import { I18n } from 'i18n';
+const i18n = new I18n();
 
 function detectDefaultLanguage(): string {
     // TODO: Implement the logic to detect the default language here
@@ -7,12 +9,14 @@ function detectDefaultLanguage(): string {
     return 'en';
 }
 
-function loadTranslation(languageCode: string) {
+function loadTranslation(languageCode?: string) {
     // Configure the module
     i18n.configure({
         locales: ['en', 'hu', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru', 'zh'],
         defaultLocale: 'en',
         directory: '../locales',
+        objectNotation: true,
+        updateFiles: false,
     });
 
     // Load the translation
@@ -21,14 +25,36 @@ function loadTranslation(languageCode: string) {
     } catch (error) {
         console.error(`[🤖]:> Error loading translation for language: ${languageCode}`);
         console.error(`[🤖]:> Falling back to English (en)`);
-        i18n.setLocale('en');
+        i18n.setLocale('hu');
     }
 
 }
 
+let translations = {};
 
-const defaultLanguage = detectDefaultLanguage();
+const loadTranslations = (locale: number | string) => {
+    const translationFile = `../locales/${locale}.json`;
+    if (fs.existsSync(translationFile)) {
+        const translationData = fs.readFileSync(translationFile, 'utf8');
+        translations = JSON.parse(translationData);
+    } else {
+        console.error(`Translation file not found for locale ${locale}`);
+    }
+};
 
-loadTranslation(defaultLanguage);
+const __ = (key: string) => {
+    const localeTranslations = translations;
+    return localeTranslations ? localeTranslations || key : key;
+};
 
-export default loadTranslation;
+i18n.configure({
+    locales: ['en', 'hu', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru', 'zh'],
+    defaultLocale: 'hu',
+    directory: '../locales',
+    objectNotation: true,
+    updateFiles: false,
+});
+
+i18n.setLocale("hu");
+
+export default i18n;

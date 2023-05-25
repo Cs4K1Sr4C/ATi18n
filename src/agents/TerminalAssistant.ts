@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+import * as MENUGROUPS from './TerminalAssistant/index';
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { HumanChatMessage } from "langchain/schema";
 import { OpenAI } from "langchain/llms/openai";

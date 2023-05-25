@@ -1,4 +1,3 @@
-require("dotenv").config();
 import terminal from "./utils/terminal";
 import terminalAI from "./utils/terminalAI";
 

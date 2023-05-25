@@ -1,10 +1,11 @@
 import * as dotenv from "dotenv";
 import * as p from "@clack/prompts";
 import color from "picocolors";
-import * as CONSTANTS from '../../../utils/constants';
-import { waitForEnter } from "../../../utils/helpers";
+import * as CONSTANTS from '../../utils/constants';
+import { waitForEnter } from "../../utils/helpers";
 import { setTimeout } from "node:timers/promises";
-import { TEST_COMPLETION, TEST_CHAT_COMPLETION } from "../../TerminalAssistant";
+import { TEST } from '../../utils/configurator';
+import { TEST_COMPLETION, TEST_CHAT_COMPLETION } from "../TerminalAssistant";
 
 dotenv.config();
 
@@ -61,6 +62,14 @@ export const selectSettingsMenu = async () => {
     message: "[🤖]::> What would you like to do?",
     options: CONSTANTS.settingsMenuOptions,
   });
+  if (settingsMenu === "1") {
+    await TEST();
+  }
+  else if (settingsMenu === "2") { }
+  else if (settingsMenu === "3") { }
+  else if (settingsMenu === "4") { }
+  else if (settingsMenu === "5") { }
+  else if (settingsMenu === "X") { }
 };
 
 export const selectTranslationMenu = async () => {
