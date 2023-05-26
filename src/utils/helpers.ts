@@ -7,7 +7,7 @@ export async function waitForEnter(): Promise<void> {
   });
 
   return new Promise((resolve) => {
-    rl.question("PRESS_ENTER_TO_CONTINUE", () => {
+    rl.question("Press Enter to step back to the Main menu", () => {
       rl.close();
       resolve();
     });

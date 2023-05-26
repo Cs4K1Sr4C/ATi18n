@@ -1,8 +1,7 @@
 import * as p from "@clack/prompts";
-import color from "picocolors";
 import { setTimeout } from 'node:timers/promises';
 
-export const TEST = async () => {
+export const Configurator = async () => {
     const project = await p.group(
         {
             path: () =>
