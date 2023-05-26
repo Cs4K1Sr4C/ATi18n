@@ -1,35 +1,21 @@
-import * as dotenv from "dotenv";
 import * as MENUGROUPS from './TerminalAssistant/index';
-import { ChatOpenAI } from "langchain/chat_models/openai";
-import { HumanChatMessage } from "langchain/schema";
-import { OpenAI } from "langchain/llms/openai";
+import { OPENAI_CHAT_COMPLETION, OPENAI_TEXT_COMPLETION } from '../services/openai';
 
-dotenv.config();
+interface TerminalAssistantConfiguration { }
 
-console.log(process.env.OPENAI_API_KEY);
+export class TerminalAssistant {
+  options: any;
+  chatModel: any;
+  textModel: any;
 
-// TESTING
-export const TEST_COMPLETION = async (prompt: string) => {
-  const model = new OpenAI({
-    temperature: 0.9,
-    openAIApiKey: process.env.OPENAI_API_KEY,
-  });
-  const res = await model.call(prompt);
+  constructor(options?: TerminalAssistantConfiguration) {
+    this.chatModel = OPENAI_CHAT_COMPLETION;
+    this.textModel = OPENAI_TEXT_COMPLETION;
+  }
 
-  console.log({ res });
-};
+  public displayMainMenu = async (firstRun: boolean, shouldExit: boolean) => {
+    MENUGROUPS.default.main.selectMainMenu(firstRun, shouldExit);
+    return shouldExit;
+  }
 
-export const TEST_CHAT_COMPLETION = async (prompt: string) => {
-  const chat = new ChatOpenAI({
-    streaming: true,
-    callbacks: [
-      {
-        handleLLMNewToken(token: string) {
-          process.stdout.write(token);
-        },
-      },
-    ],
-  });
-
-  await chat.call([new HumanChatMessage(prompt)]);
-};
+}

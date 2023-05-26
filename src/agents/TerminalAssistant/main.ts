@@ -1,13 +1,10 @@
-import * as dotenv from "dotenv";
 import * as p from "@clack/prompts";
-import color from "picocolors";
 import * as CONSTANTS from '../../utils/constants';
 import { waitForEnter } from "../../utils/helpers";
 import { setTimeout } from "node:timers/promises";
-import { TEST } from '../../utils/configurator';
-import { TEST_COMPLETION, TEST_CHAT_COMPLETION } from "../TerminalAssistant";
+import { TerminalAssistant } from "../TerminalAssistant";
 
-dotenv.config();
+const TA = new TerminalAssistant();
 
 const s = p.spinner();
 
@@ -27,21 +24,22 @@ export const selectMainMenu = async (
   } else if (mainMenu === "3") {
     const settingsMenu = await selectSettingsMenu();
   } else if (mainMenu === "4") {
-  } else if (mainMenu === "5") {
     const project = await p.group({
       prompt: () =>
         p.text({
-          message: "Type your prompt",
-          placeholder: "Tell me more about the vaacuum in the universe",
+          message: "Ask me anything about the ATi18n platform...",
+          placeholder: "How can I change the OpenAI key?",
           validate: (value) => {
-            if (!value) return "Please type your prompt";
+            if (!value) return "Please ask me something...";
           },
         }),
     });
 
-    await TEST_CHAT_COMPLETION(project.prompt);
+    await TA.textModel(project.prompt);
+    console.log('\n\n\n');
     await waitForEnter();
-  } else if (mainMenu === "X") {
+  }
+  else if (mainMenu === "X") {
     const _exit = await exit(shouldExit);
     return _exit;
   }
@@ -62,9 +60,7 @@ export const selectSettingsMenu = async () => {
     message: "[🤖]::> What would you like to do?",
     options: CONSTANTS.settingsMenuOptions,
   });
-  if (settingsMenu === "1") {
-    await TEST();
-  }
+  if (settingsMenu === "1") { }
   else if (settingsMenu === "2") { }
   else if (settingsMenu === "3") { }
   else if (settingsMenu === "4") { }
