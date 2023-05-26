@@ -2,6 +2,7 @@ import * as p from "@clack/prompts";
 import * as CONSTANTS from '../../utils/constants';
 import { waitForEnter } from "../../utils/helpers";
 import { setTimeout } from "node:timers/promises";
+import * as MENUGROUPS from './index';
 import { TerminalAssistant } from "../TerminalAssistant";
 
 const TA = new TerminalAssistant();
@@ -22,7 +23,7 @@ export const selectMainMenu = async (
   } else if (mainMenu === "2") {
     const translateMenu = await selectTranslationMenu();
   } else if (mainMenu === "3") {
-    const settingsMenu = await selectSettingsMenu();
+    const settingsMenu = await MENUGROUPS.default.settings;
   } else if (mainMenu === "4") {
     const project = await p.group({
       prompt: () =>
@@ -52,20 +53,6 @@ export const selectExtractionMenu = async () => {
     options: CONSTANTS.extractionMenuOptions,
   });
   return extractionMenu;
-};
-
-export const selectSettingsMenu = async () => {
-  console.clear();
-  const settingsMenu = await p.select({
-    message: "[🤖]::> What would you like to do?",
-    options: CONSTANTS.settingsMenuOptions,
-  });
-  if (settingsMenu === "1") { }
-  else if (settingsMenu === "2") { }
-  else if (settingsMenu === "3") { }
-  else if (settingsMenu === "4") { }
-  else if (settingsMenu === "5") { }
-  else if (settingsMenu === "X") { }
 };
 
 export const selectTranslationMenu = async () => {
