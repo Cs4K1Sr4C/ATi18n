@@ -1,11 +1,14 @@
 import { menuOption } from './types'
 
+export const GPT_35_TURBO = "gpt-3.5-turbo" as const;
+export const GPT_4 = "gpt-4" as const;
+export const GPT_MODEL_NAMES = [GPT_35_TURBO, GPT_4];
+
 export const mainMenuOptions: menuOption[] = [
     { label: "Extract", value: "1" },
     { label: "Translate", value: "2" },
     { label: "Settings", value: "3" },
     { label: "Help", value: "4" },
-    { label: "TEST", value: "5" },
     { label: "Exit", value: "X" }
 ]
 
