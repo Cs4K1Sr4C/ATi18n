@@ -5,7 +5,6 @@ import { setTimeout } from "node:timers/promises";
 import * as MENUGROUPS from '../agents/TerminalAssistant/index';
 import { OPENAI_CHAT_COMPLETION } from "../services/openai";
 
-// Configurator AI (Memoryless)
 const welcomerSystemPrompt = "You are an AI who welcomes the user at ATi18n the AI driven interactive i18n integrator and translator platform and you don't have to ask that how may you help.";
 
 // Visual Elements
