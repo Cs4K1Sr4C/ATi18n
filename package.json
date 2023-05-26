@@ -28,6 +28,7 @@
   "dependencies": {
     "@huggingface/inference": "^1.8.0",
     "asyncio": "^0.0.2",
-    "i18n": "^0.15.1"
+    "i18n": "^0.15.1",
+    "typeorm": "^0.3.16"
   }
 }
