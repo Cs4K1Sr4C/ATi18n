@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { REGEXES } from '../utils/regexes';
+import { REGEXES } from '../../../utils/regexes';
 
 interface MatchedPart {
   file: string;
@@ -68,5 +68,5 @@ async function searchTextsAndWriteToFile(directory: string): Promise<void> {
 
   console.log(`[🤖]:> Regex based extractions completed... The JSON file path is: ${directory}/output.json`);
 }
-  
+
 export default searchTextsAndWriteToFile;

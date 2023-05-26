@@ -1,25 +1,29 @@
 import { PromptTemplate } from "langchain/prompts";
 
 /**
- * Example usage:
- * const output = sourceCodeProcessingPrompt.process(input);
- * console.log(output);
+ * This prompt template allows the user to change every static translatable part of the source with the
+ * extending of a translate() function. It will insert the original static text inside the translate() function.
+ * 
+ * The input variable:
+ * - sourceCode: The source code to be processed.
+ * 
+ * The output variable:
+ * - modifiedSourceCode: The modified source code.
+ * 
  */
 export const sourceCodeProcessingPrompt = new PromptTemplate({
-template: `As ATi18n, the translation integrator and project translator AI, your task is to process the given source code based on specific cases. Here are some examples of how to process different source code scenarios:
+  template: `As ATi18n, the translation integrator and project translator AI, your task is to process the given source code based on specific cases. In addition you have to use your programming skills and thoughtfully. Here are some examples of how to process different source code scenarios:
 
 Case 1:
 Source Code: "<Text title={Hello, world!}>Here just some text but need to be translated<"
 Modified Source Code: "<Text title={${`translate('Hello, world!')`}}>{translate('Here just some text but need to be translated')}</"
-Explanation: In this case, you need to wrap the translatable parts with the translation function.
 
 Case 2:
 Source Code: "const welcomeMessage = 'Welcome, user!';"
-Modified Code: "const welcomeMessage = ${`translate('Welcome, user!')`}
-Explanation: In this case, you need to identify and wrap the translatable the translatable part with the translation function.
+Modified Source Code: "const welcomeMessage = ${`translate('Welcome, user!')`}
 
 Case 3:
-Source code: "<Input
+Source Code: "<Input
         size="lg"
         {...register("name", {
           required: "This field is required.",
@@ -28,7 +32,7 @@ Source code: "<Input
             message: "The maximum possible name length is 50 characters",
           },
         })}"
-Modified Source Code:"<Input
+Modified Source Code: "<Input
         size="lg"
         {...register("name", {
           required: translate('This field is required.'),
@@ -37,16 +41,26 @@ Modified Source Code:"<Input
             message: \`\${translate('The maximum possible name length is 50 characters')}\`,
           },
         })}"
-Explanation: In this case, you need to identify and wrap the translatable parts with the translation function. Ensure that you are using the correct syntax of the translate wrapper, which can be \`\${translate()}\` or just simply translate()
 
-Process the following source code accordingly to the described cases, then return the modified source code!
+Case 4:
+Source Code: "const messages = {
+  greeting: 'Hello, {name}!',
+  instruction: 'Please enter your {field}.',
+  success: 'Success!',
+};"
+Modified Source Code: "const messages = {
+  greeting: \`\${translate('Hello')}, \${name}!\`,
+  instruction: \`\${translate('Please enter your')} \${field}.\`,
+  success: \`\${translate('Success!')}\`,
+};
+
 
 Source code:
 ...
 {sourceCode}
 ...
 `,
-inputVariables: ["sourceCode"],
+  inputVariables: ["sourceCode"],
 });
 /**
  * EXAMPLE (source of the sourceCode's value: Guild.xyz - https://github.com/agoraxyz/guild.xyz)
@@ -83,7 +97,6 @@ INPUT:
       </Button>
     </AlertDialogFooter>`,
   fileName: "DeleteGuildButton.tsx",
-  translatablePart: "Delete guild",
   startIndex: 18
 };
 
