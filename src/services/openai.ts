@@ -1,3 +1,4 @@
+import { createClient } from "redis";
 import { OpenAI } from "langchain/llms/openai";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import {
@@ -6,6 +7,7 @@ import {
   AIChatMessage,
 } from "langchain/schema";
 import { BaseMemory, BufferMemory, ChatMessageHistory } from "langchain/memory";
+import { RedisChatMessageHistory } from "langchain/stores/message/redis";
 import { ConversationChain } from "langchain/chains";
 import type {
   textCompletionModel,
@@ -23,8 +25,6 @@ import {
   MemoryVariables,
   OutputValues,
 } from "langchain/dist/memory/base";
-
-const chatHistory = new ChatMessageHistory(); // Create an empty chat history
 
 const createTextCompletionModel = (settings?: textCompletionModel) => {
   return new OpenAI({
@@ -67,17 +67,14 @@ const createChatCompletionModel = async (
     });
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
       SystemMessagePromptTemplate.fromTemplate(systemMessage),
+      new MessagesPlaceholder("history"),
       HumanMessagePromptTemplate.fromTemplate("{input}"),
     ]);
 
     const chain = new ConversationChain({
-      memory: new BufferMemory({
-        returnMessages: true,
-        memoryKey: "streaming_history",
-        chatHistory, // Provide the chat history to BufferMemory
-      }),
       prompt: chatPrompt,
       llm: chat,
+      memory: new BufferMemory({ returnMessages: true, memoryKey: "history" }),
     });
 
     return chain;
@@ -88,17 +85,14 @@ const createChatCompletionModel = async (
     });
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
       SystemMessagePromptTemplate.fromTemplate(systemMessage),
+      new MessagesPlaceholder("history"),
       HumanMessagePromptTemplate.fromTemplate("{input}"),
     ]);
 
     const chain = new ConversationChain({
-      memory: new BufferMemory({
-        returnMessages: true,
-        memoryKey: "non_streaming_history",
-        chatHistory, // Provide the chat history to BufferMemory
-      }),
       prompt: chatPrompt,
       llm: chat,
+      memory: new BufferMemory({ returnMessages: true, memoryKey: "history" }),
     });
 
     return chain;

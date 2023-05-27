@@ -16,9 +16,9 @@ const s = p.spinner();
 export const selectMainMenu = async (
   freshStart: boolean,
   shouldExit: boolean,
-  TA: TerminalAssistant
+  TA: TerminalAssistant,
 ) => {
-  const mainMenu = await p.select({
+  let mainMenu = await p.select({
     message: "[🤖]:::> Select a menu then press enter to see its content!",
     options: mainMenuOptions,
   });
@@ -32,8 +32,7 @@ export const selectMainMenu = async (
   } else if (mainMenu === "4") {
     let condition = true;
     do {
-      const chat = await TA.chatModel();
-      const help = await p.group({
+      let help = await p.group({
         question: () =>
           p.text({
             message: "[🤖]:::> Ask me anything about the ATi18n platform...",
@@ -44,7 +43,6 @@ export const selectMainMenu = async (
             },
           }),
       });
-
       if (
         help.question === "X" ||
         help.question === "x" ||
@@ -57,7 +55,9 @@ export const selectMainMenu = async (
       ) {
         condition = false;
       } else {
-        await chat.call({ input: help.question });
+        s.start("ℹ Waiting for the answer...");
+        let answer = await TA.chatModel.call({ input: help.question });
+        s.stop(`[🤖]:::> ${answer["response"]}`);
         console.log(
           "\n\n\nPress 'ENTER' to continue or press the 'ESCAPE' button to step back to the Main menu."
         );
@@ -65,8 +65,7 @@ export const selectMainMenu = async (
       }
     } while (condition);
   } else if (mainMenu === "X") {
-    const _exit = await exit(shouldExit);
-    return _exit;
+    return await exit(shouldExit);
   }
 };
 
