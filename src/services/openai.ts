@@ -1,18 +1,11 @@
-import { createClient } from "redis";
 import { OpenAI } from "langchain/llms/openai";
 import { ChatOpenAI } from "langchain/chat_models/openai";
-import {
-  SystemChatMessage,
-  HumanChatMessage,
-  AIChatMessage,
-} from "langchain/schema";
-import { BaseMemory, BufferMemory, ChatMessageHistory } from "langchain/memory";
-import { RedisChatMessageHistory } from "langchain/stores/message/redis";
+import { BufferMemory } from "langchain/memory";
 import { ConversationChain } from "langchain/chains";
 import type {
   textCompletionModel,
   chatCompletionModel,
-} from "../types/openAIModelSettings";
+} from "../utils/types";
 import {
   ChatPromptTemplate,
   HumanMessagePromptTemplate,
@@ -22,9 +15,15 @@ import {
 import { GPT_35_TURBO } from "../utils/constants";
 import {
   InputValues,
-  MemoryVariables,
   OutputValues,
 } from "langchain/dist/memory/base";
+
+const sourceMemory = new BufferMemory({ returnMessages: true, memoryKey: "history" });
+
+const input: InputValues = { text: "My name is John and the weather is sunny now." };
+const output: OutputValues = { text: "Nice to meet you John. Thank you for providing me the current information about the weather." };
+
+sourceMemory.saveContext(input, output);
 
 const createTextCompletionModel = (settings?: textCompletionModel) => {
   return new OpenAI({
@@ -40,6 +39,7 @@ const createTextCompletionModel = (settings?: textCompletionModel) => {
         },
       },
     ],
+    cache: true
   });
 };
 
@@ -64,6 +64,7 @@ const createChatCompletionModel = async (
           },
         },
       ],
+      cache: true
     });
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
       SystemMessagePromptTemplate.fromTemplate(systemMessage),
@@ -74,7 +75,8 @@ const createChatCompletionModel = async (
     const chain = new ConversationChain({
       prompt: chatPrompt,
       llm: chat,
-      memory: new BufferMemory({ returnMessages: true, memoryKey: "history" }),
+      //memory: new BufferMemory({ returnMessages: true, memoryKey: "history" }),
+      memory: sourceMemory
     });
 
     return chain;
@@ -82,6 +84,7 @@ const createChatCompletionModel = async (
     const chat = new ChatOpenAI({
       temperature: settings?.temperature || 0.9,
       streaming: false,
+      cache: true
     });
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
       SystemMessagePromptTemplate.fromTemplate(systemMessage),
@@ -92,7 +95,8 @@ const createChatCompletionModel = async (
     const chain = new ConversationChain({
       prompt: chatPrompt,
       llm: chat,
-      memory: new BufferMemory({ returnMessages: true, memoryKey: "history" }),
+      //memory: new BufferMemory({ returnMessages: true, memoryKey: "history" }),
+      memory: sourceMemory
     });
 
     return chain;
