@@ -1,15 +1,16 @@
 import * as fs from "fs";
 import * as p from "@clack/prompts";
-import color from "picocolors";
 import { setTimeout } from "node:timers/promises";
-import { TerminalAssistant } from "../agents/ATi18n";
+import { ATi18n } from "../agents/ATi18n";
 import * as MENUGROUPS from "../agents/ATi18n/index";
+import { Configurator } from "../utils/configurator";
+import MemoryHandler from "./memoryHandler";
 
 // Visual Elements
 const s = p.spinner();
 
-// TerminalAssistant
-const TA = new TerminalAssistant();
+// ATi18n
+const _ATi18n = new ATi18n();
 
 // Main - loop
 const terminal = async (freshStart: boolean) => {
@@ -20,26 +21,23 @@ const terminal = async (freshStart: boolean) => {
 
   if (freshStart) {
     if (firstRun) {
-      p.text({
-        message:
-          "ℹ There is no configuration file found. I will guide you through the configuration process...",
-      });
+      p.note("ℹ There is no configuration file found. I will guide you through the configuration process...");
     }
-    // TODO: Implement here the configurator interface
+    //let config = await Configurator();
     s.start("ℹ Saving the configuration file...");
     fs.writeFileSync(
       __dirname + "/../config.json",
       JSON.stringify({}, null, 2)
     );
     await setTimeout(3000);
-    s.stop("ℹ Configuration file has been saved");
+    s.stop("ℹ Configuration file has been saved! Continue...");
   }
 
   while (!shouldExit) {
     const selectMainMenuAnswer = await MENUGROUPS.default.main.selectMainMenu(
       freshStart,
       shouldExit,
-      TA
+      _ATi18n
     );
     selectMainMenuAnswer === true ? (shouldExit = true) : (shouldExit = false);
   }

@@ -1,6 +1,7 @@
 import { OpenAI } from "langchain/llms/openai";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { BufferMemory } from "langchain/memory";
+import MemoryHandler from "../modules/memoryHandler";
 import { ConversationChain } from "langchain/chains";
 import type {
   textCompletionModel,
@@ -19,11 +20,13 @@ import {
 } from "langchain/dist/memory/base";
 
 const sourceMemory = new BufferMemory({ returnMessages: true, memoryKey: "history" });
-
-const input: InputValues = { text: "My name is John and the weather is sunny now." };
-const output: OutputValues = { text: "Nice to meet you John. Thank you for providing me the current information about the weather." };
-
+let input: InputValues = { text: "My name is John and the weather is sunny now." };
+let output: OutputValues = { text: "Nice to meet you John. Thank you for providing me the current information about the weather." };
 sourceMemory.saveContext(input, output);
+input = { text: "required: \"This field is required.\"," }
+output = { text: "required: translate('This field is required.')," }
+sourceMemory.saveContext(input, output);
+
 
 const createTextCompletionModel = (settings?: textCompletionModel) => {
   return new OpenAI({

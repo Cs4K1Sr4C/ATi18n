@@ -1,23 +1,26 @@
 import * as p from "@clack/prompts";
 import {
-  mainMenuOptions,
-  extractionMenuOptions,
-  translationMenuOptions,
+  mainMenuOptions
 } from "../../utils/constants";
 import { waitForEscapeOrEnter } from "../../utils/helpers";
 import { setTimeout } from "node:timers/promises";
 import selectSettingsMenu from "./settings";
 import selectTranslationMenu from "./translation";
 import selectExtractionMenu from "./extraction";
-import { TerminalAssistant } from "../ATi18n";
+import { ATi18n } from "../ATi18n";
 
 const s = p.spinner();
 
 export const selectMainMenu = async (
   freshStart: boolean,
   shouldExit: boolean,
-  TA: TerminalAssistant,
+  ATi18n: ATi18n,
 ) => {
+  if (freshStart === true) {
+    let welcome = await ATi18n.chatModel.call({ input: "Welcome me shortly on the platform of ATi18n." });
+    p.note(`[🤖]:::> ${welcome["response"]}`);
+    freshStart = false;
+  }
   let mainMenu = await p.select({
     message: "[🤖]:::> Select a menu then press enter to see its content!",
     options: mainMenuOptions,
@@ -36,7 +39,7 @@ export const selectMainMenu = async (
         question: () =>
           p.text({
             message: "[🤖]:::> Ask me anything about the ATi18n platform...",
-            placeholder: "How can I change the OpenAI key?",
+            placeholder: "",
             validate: (value) => {
               if (!value)
                 return "[🤖]:::> Ask me something or quit from this menu via sending a 'q' letter.";
@@ -56,11 +59,12 @@ export const selectMainMenu = async (
         condition = false;
       } else {
         s.start("ℹ Waiting for the answer...");
-        let answer = await TA.chatModel.call({ input: help.question });
-        s.stop(`[🤖]:::> ${answer["response"]}`);
-        console.log(
-          "\n\n\nPress 'ENTER' to continue or press the 'ESCAPE' button to step back to the Main menu."
-        );
+        let answer = await ATi18n.chatModel.call({ input: help.question });
+        p.text({ message: `[🤖]:::> ${answer["response"]}` });
+        s.stop(`[🤖]:::> Press 'ENTER' to continue the conversation or press the 'ESCAPE' button to step back to the Main menu.`);
+        //console.log(
+        //  "\n\n\nPress 'ENTER' to continue or press the 'ESCAPE' button to step back to the Main menu."
+        //);
         condition = await waitForEscapeOrEnter(condition);
       }
     } while (condition);

@@ -49,8 +49,8 @@ Source Code: "const messages = {
   success: 'Success!',
 };"
 Modified Source Code: "const messages = {
-  greeting: \`\${translate('Hello')}, \${name}!\`,
-  instruction: \`\${translate('Please enter your')} \${field}.\`,
+  greeting: \`\$\{translate('Hello')\}, \${name}!\`,
+  instruction: \`\$\{translate('Please enter your')\} \${field}.\`,
   success: \`\${translate('Success!')}\`,
 };
 
