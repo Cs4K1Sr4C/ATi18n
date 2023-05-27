@@ -2,40 +2,45 @@ import * as fs from "fs";
 import * as p from "@clack/prompts";
 import color from "picocolors";
 import { setTimeout } from "node:timers/promises";
-import * as MENUGROUPS from '../agents/TerminalAssistant/index';
-import { OPENAI_CHAT_COMPLETION } from "../services/openai";
-
-const welcomerSystemPrompt = "You are an AI who welcomes the user at ATi18n the AI driven interactive i18n integrator and translator platform and you don't have to ask that how may you help.";
+import { TerminalAssistant } from "../agents/ATi18n";
+import * as MENUGROUPS from "../agents/ATi18n/index";
 
 // Visual Elements
 const s = p.spinner();
 
+// TerminalAssistant
+const TA = new TerminalAssistant();
+
 // Main - loop
-const terminal = async (firstRun: boolean) => {
+const terminal = async (freshStart: boolean) => {
   console.clear();
 
   let shouldExit = false;
-  let _firstRun = firstRun;
-  const chat = await OPENAI_CHAT_COMPLETION(welcomerSystemPrompt)
+  let firstRun = !fs.existsSync(__dirname + "/../config.json") ? false : true;
 
-  if (firstRun) {
-    let res = await chat.call({ input: "Hello" });
-
-    if (!fs.existsSync("../config.json")) {
-      await setTimeout(3000);
-      p.text({ message: "ℹ There is no configuration file found. I will guide you through the configuration process..." });
+  if (freshStart) {
+    if (firstRun) {
+      p.text({
+        message:
+          "ℹ There is no configuration file found. I will guide you through the configuration process...",
+      });
     }
-
+    // TODO: Implement here the configurator interface
     s.start("ℹ Saving the configuration file...");
-    fs.writeFileSync("../config.json", JSON.stringify({}, null, 2));
+    fs.writeFileSync(
+      __dirname + "/../config.json",
+      JSON.stringify({}, null, 2)
+    );
     await setTimeout(3000);
     s.stop("ℹ Configuration file has been saved");
   }
 
-  _firstRun = false;
-
   while (!shouldExit) {
-    const selectMainMenuAnswer = await MENUGROUPS.default.main.selectMainMenu(_firstRun, shouldExit);
+    const selectMainMenuAnswer = await MENUGROUPS.default.main.selectMainMenu(
+      freshStart,
+      shouldExit,
+      TA
+    );
     selectMainMenuAnswer === true ? (shouldExit = true) : (shouldExit = false);
   }
 };

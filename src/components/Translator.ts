@@ -1,14 +1,10 @@
-import * as dotenv from "dotenv";
 import * as fs from "fs";
 import * as path from "path";
 import { Configuration, OpenAIApi } from "openai";
-import * as TextCompletionPrompts from "../../prompts/text/prompts";
-import "../../utils/helpers";
-import { REGEXES } from "../../utils/regexes";
+import * as TextCompletionPrompts from "../prompts/text/prompts";
+import "../utils/helpers";
+import { REGEXES } from "../utils/regexes";
 import { setTimeout } from "node:timers/promises";
-
-dotenv.config();
-console.log(process.env.OPENAI_TRANSLATION_METHOD);
 
 interface TranslationOptions {
   debug?: boolean;
@@ -76,7 +72,7 @@ class Translator {
       this.openai = new OpenAIApi(this.configuration);
     } else {
       throw new Error(
-        "ERROR: OpenAI API key is not set but the translator service is set to 'openai'"
+        "[🤖]:::> ERROR: OpenAI API key is not set but the translator service is set to 'openai'"
       );
     }
   }
@@ -111,24 +107,24 @@ class Translator {
       let defaultText: string = match[3]
         ? match[2]
         : match[2] !== ""
-          ? match[2]
-          : "common";
+        ? match[2]
+        : "common";
       let namespace: string = match[3]
         ? match[3] !== ""
           ? match[3]
           : "common"
         : match[2]
-          ? match[2] !== ""
-            ? match[2]
-            : "common"
-          : "common";
+        ? match[2] !== ""
+          ? match[2]
+          : "common"
+        : "common";
       if (this.debug && !match[3] && !match[4]) {
         console.log(
           key +
-          " at line " +
-          fileContent.substring(0, regex.lastIndex).split("\n").length +
-          " " +
-          filePath
+            " at line " +
+            fileContent.substring(0, regex.lastIndex).split("\n").length +
+            " " +
+            filePath
         );
       }
 
@@ -359,7 +355,7 @@ class Translator {
       const TRANSLATE_PROMPT = `Translate the ${sourceTranslationValue} text using the ${this.targetLang} language code then respond only with the translated text.`;
       return await this.translateViaTextCompletion(TRANSLATE_PROMPT);
     } else {
-      console.log("No translator service selected.");
+      console.log("[🤖]:::> No translator service selected.");
       return "";
     }
   }
@@ -382,7 +378,9 @@ class Translator {
       try {
         existingTranslations = JSON.parse(existingContent);
       } catch (error) {
-        console.error(`Error parsing existing translations file: ${filePath}`);
+        console.error(
+          `[🤖]:::> Error parsing existing translations file: ${filePath}`
+        );
       }
 
       const mergedTranslations = { ...existingTranslations, ...translation };
@@ -486,7 +484,9 @@ class Translator {
 
       return { key, namespace };
     } else {
-      throw new Error("Invalid translation service or translation method");
+      throw new Error(
+        "[🤖]:::> Invalid translation service or translation method"
+      );
     }
   }
 
@@ -551,7 +551,7 @@ class Translator {
 
     if (!fs.existsSync(sourceLangDir)) {
       throw new Error(
-        `Source language directory '${sourceLangDir}' does not exist.`
+        `[🤖]:::> Source language directory '${sourceLangDir}' does not exist.`
       );
     }
 
@@ -577,7 +577,7 @@ class Translator {
 
         if (!fs.existsSync(targetLangDir)) {
           throw new Error(
-            `Target language directory '${targetLangDir}' does not exist for language '${lang}'.`
+            `[🤖]:::> Target language directory '${targetLangDir}' does not exist for language '${lang}'.`
           );
         }
 
@@ -682,11 +682,11 @@ class Translator {
   // main run
   async run(srcDirectory: string): Promise<void> {
     console.log(
-      `[ATi18n]:> Starting translation process for ${this.srcDirectory} directory`
+      `[🤖]:::> Starting translation process for ${this.srcDirectory} directory`
     );
     this.collectKeyNamespacePairs(srcDirectory);
     await this.translateAndWriteFiles();
-    console.log("[ATi18n]:> Translation files generated successfully.");
+    console.log("[🤖]:::> Translation files generated successfully.");
   }
 }
 

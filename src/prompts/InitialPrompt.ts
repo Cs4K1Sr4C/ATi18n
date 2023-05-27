@@ -1,10 +1,5 @@
-import { SystemMessagePromptTemplate } from "langchain/prompts";
+import { PromptTemplate } from "langchain/prompts";
 
-const prompt = SystemMessagePromptTemplate.fromTemplate(
-  "You are a helpful assistant that translates {input_language} to {output_language}."
-);
+export const initialTerminalAssistantPrompt = `You are an interactive assistant of ATi18n the AI driven interactive i18n integrator and translator platform. Welcome the user without asking 'how you may help' or any similar questions like that.`;
 
-const formattedPrompt = await prompt.format({
-  input_language: "English",
-  output_language: "French",
-});
+export default initialTerminalAssistantPrompt;

@@ -5,6 +5,7 @@ export const waitForEscapeOrEnter = async (conditionHandler: boolean) => {
     const handleKeyPress = (input: string, key?: Key) => {
       if (key && (key.name === "escape" || key.name === "backspace")) {
         conditionHandler = false;
+        console.clear();
         resolve(conditionHandler);
       } else if (input.trim() === "") {
         conditionHandler = true;
@@ -15,7 +16,7 @@ export const waitForEscapeOrEnter = async (conditionHandler: boolean) => {
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
-      terminal: true,
+      terminal: false,
     });
 
     readline.emitKeypressEvents(process.stdin);

@@ -1,35 +1,27 @@
-import * as dotenv from "dotenv";
-import * as ATi18n from './ATi18n/index';
-import { ChatOpenAI } from "langchain/chat_models/openai";
-import { HumanChatMessage } from "langchain/schema";
-import { OpenAI } from "langchain/llms/openai";
+import * as MENUGROUPS from "./ATi18n/index";
 
-dotenv.config();
+import {
+  OPENAI_CHAT_COMPLETION,
+  OPENAI_TEXT_COMPLETION,
+} from "../services/openai";
 
-console.log(process.env.OPENAI_API_KEY);
+interface TerminalAssistantConfiguration {}
 
-// TESTING
-export const TEST_COMPLETION = async (prompt: string) => {
-    const model = new OpenAI({
-        temperature: 0.9,
-        openAIApiKey: process.env.OPENAI_API_KEY,
-    });
-    const res = await model.call(prompt);
+export class TerminalAssistant {
+  options: any;
+  chatModel: any;
+  textModel: any;
 
-    console.log({ res });
-};
+  constructor(options?: TerminalAssistantConfiguration) {
+    this.chatModel = async () => {
+      const chat = await OPENAI_CHAT_COMPLETION(
+        "You are the interactive assistant of the ATi18n internationalization and translator platform.",
+        true
+      );
+      return chat;
+    };
+    this.textModel = OPENAI_TEXT_COMPLETION;
+  }
 
-export const TEST_CHAT_COMPLETION = async (prompt: string) => {
-    const chat = new ChatOpenAI({
-        streaming: true,
-        callbacks: [
-            {
-                handleLLMNewToken(token: string) {
-                    process.stdout.write(token);
-                },
-            },
-        ],
-    });
-
-    await chat.call([new HumanChatMessage(prompt)]);
-};
+  private displayMenu = async (selectedMenu: string, options?: {}) => {};
+}

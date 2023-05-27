@@ -19,6 +19,6 @@
     "ignoreDeprecations": "5.0",
     "strictNullChecks": false
   },
-  "include": ["src/**/*", ".env"],
+  "include": ["src/**/*", ".env", "src/config.json"],
   "exclude": ["node_modules"]
 }
