@@ -3,13 +3,13 @@ import { PromptTemplate } from "langchain/prompts";
 /**
  * This prompt template allows the user to change every static translatable part of the source with the
  * extending of a translate() function. It will insert the original static text inside the translate() function.
- * 
+ *
  * The input variable:
  * - sourceCode: The source code to be processed.
- * 
+ *
  * The output variable:
  * - modifiedSourceCode: The modified source code.
- * 
+ *
  */
 export const sourceCodeProcessingPrompt = new PromptTemplate({
   template: `As ATi18n, the translation integrator and project translator AI, your task is to process the given source code based on specific cases. In addition you have to use your programming skills and thoughtfully. Here are some examples of how to process different source code scenarios:
@@ -55,7 +55,7 @@ Modified Source Code: "const messages = {
 };
 
 
-Source code:
+Source code you have to modify:
 ...
 {sourceCode}
 ...

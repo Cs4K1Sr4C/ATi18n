@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@huggingface/inference": "^1.8.0",
+    "@prisma/client": "^4.14.1",
     "asyncio": "^0.0.2",
     "i18n": "^0.15.1",
     "typeorm": "^0.3.16"

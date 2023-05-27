@@ -1,7 +1,11 @@
 import { OpenAI } from "langchain/llms/openai";
 import { ChatOpenAI } from "langchain/chat_models/openai";
-import { SystemChatMessage, HumanChatMessage } from "langchain/schema";
-import { BufferMemory } from "langchain/memory";
+import {
+  SystemChatMessage,
+  HumanChatMessage,
+  AIChatMessage,
+} from "langchain/schema";
+import { BaseMemory, BufferMemory, ChatMessageHistory } from "langchain/memory";
 import { ConversationChain } from "langchain/chains";
 import type {
   textCompletionModel,
@@ -14,6 +18,13 @@ import {
   MessagesPlaceholder,
 } from "langchain/prompts";
 import { GPT_35_TURBO } from "../utils/constants";
+import {
+  InputValues,
+  MemoryVariables,
+  OutputValues,
+} from "langchain/dist/memory/base";
+
+const chatHistory = new ChatMessageHistory(); // Create an empty chat history
 
 const createTextCompletionModel = (settings?: textCompletionModel) => {
   return new OpenAI({
@@ -43,7 +54,7 @@ const createChatCompletionModel = async (
   settings?: chatCompletionModel
 ) => {
   if (settings?.streaming) {
-    const model = new ChatOpenAI({
+    const chat = new ChatOpenAI({
       temperature: settings?.temperature || 0.9,
       streaming: settings?.streaming || true,
       callbacks: [
@@ -56,38 +67,38 @@ const createChatCompletionModel = async (
     });
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
       SystemMessagePromptTemplate.fromTemplate(systemMessage),
-      new MessagesPlaceholder("history"),
       HumanMessagePromptTemplate.fromTemplate("{input}"),
     ]);
 
     const chain = new ConversationChain({
       memory: new BufferMemory({
         returnMessages: true,
-        memoryKey: "history",
+        memoryKey: "streaming_history",
+        chatHistory, // Provide the chat history to BufferMemory
       }),
       prompt: chatPrompt,
-      llm: model,
+      llm: chat,
     });
 
     return chain;
   } else {
-    const model = new ChatOpenAI({
+    const chat = new ChatOpenAI({
       temperature: settings?.temperature || 0.9,
       streaming: false,
     });
     const chatPrompt = ChatPromptTemplate.fromPromptMessages([
       SystemMessagePromptTemplate.fromTemplate(systemMessage),
-      new MessagesPlaceholder("history"),
       HumanMessagePromptTemplate.fromTemplate("{input}"),
     ]);
 
     const chain = new ConversationChain({
       memory: new BufferMemory({
         returnMessages: true,
-        memoryKey: "history",
+        memoryKey: "non_streaming_history",
+        chatHistory, // Provide the chat history to BufferMemory
       }),
       prompt: chatPrompt,
-      llm: model,
+      llm: chat,
     });
 
     return chain;

@@ -1,10 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { Configuration, OpenAIApi } from "openai";
-import * as TextCompletionPrompts from "../prompts/text/prompts";
 import "../utils/helpers";
-import { REGEXES } from "../utils/regexes";
-import { setTimeout } from "node:timers/promises";
 
 interface TranslationOptions {
   debug?: boolean;

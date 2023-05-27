@@ -1,5 +1,5 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 
 export const writeAndMoveTranslateFile = (directory?: string | null) => {
   const content = `
@@ -15,18 +15,21 @@ export const writeAndMoveTranslateFile = (directory?: string | null) => {
   };`;
   const defaultDirectory = process.env.TRANSLATABLE_PROJECT_RELEATIVE_PATH;
   const targetDirectory = defaultDirectory;
-  const filePath = path.join(targetDirectory, 'translate.ts');
+  const filePath = path.join(targetDirectory as string, "translate.ts");
 
   try {
     fs.writeFileSync(filePath, content);
     console.log(`[🤖]:> File "translate.ts" created at ${filePath}`);
 
     if (directory && directory !== defaultDirectory) {
-      const newFilePath = path.join(targetDirectory, 'translate.ts');
+      const newFilePath = path.join(targetDirectory as string, "translate.ts");
       fs.renameSync(filePath, newFilePath);
       console.log(`[🤖]:> File moved to ${newFilePath}`);
     }
   } catch (error) {
-    console.error('[🤖]:> An error occurred while writing/moving the file:', error);
+    console.error(
+      "[🤖]:> An error occurred while writing/moving the file:",
+      error
+    );
   }
 };
